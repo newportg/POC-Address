@@ -4,14 +4,14 @@ International address management proof-of-concept. Validates, formats, and displ
 
 ## Architecture
 
-- **Client** — Svelte SPA. Country dropdown with flags, single-line address input, formatted results display.
-- **API** — Backend layer that proxies to the external LOQATE service for address cleansing and element extraction.
-- **LOQATE** — External address validation API (`api.addressy.com`). Returns structured address elements per country.
+- **Client** — Svelte SPA. Single page with a centered search bar. Country selector (defaults to UK) + address input. Results listed below the search bar.
+- **API** — Backend layer that proxies to the external LOQATE service for address search.
+- **LOQATE** — External address search API (`api.addressy.com`). Returns matching addresses for a given country + search string.
 
 ## APIs
 
-1. **Countries API** — Returns list of countries, their flags, and UPU S42 format templates.
-2. **Address Parse API** — Accepts a country + single-line address string, returns the address broken into UPU S42 elements formatted for that country.
+1. **Countries API** — Returns list of countries and their flags for the selector dropdown.
+2. **Address Search API** — Accepts a country + search string, returns matching addresses from LOQATE.
 
 ## Standard
 
@@ -21,6 +21,6 @@ Each country uses a subset of the 15 UPU S42 elements. Format templates are defi
 
 ## Reference
 
-LOQATE Batch API used as the reference implementation for address element extraction.
+LOQATE Search API used as the reference implementation for address lookup.
 
-Example request/response captured in the raw note: `raw/Readme.md` (now archived).
+Example request/response captured in the raw note: `archive/Readme.md`.
