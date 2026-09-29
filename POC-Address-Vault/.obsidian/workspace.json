@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "6a7829faf46fccb0",
+        "id": "24a240f8c91429b0",
         "type": "tabs",
         "children": [
           {
-            "id": "a37e985b33a96ce7",
+            "id": "1abf89b3c24d5d52",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -199,6 +199,10 @@
   },
   "active": "38cb4dc00bab30b5",
   "lastOpenFiles": [
+    "archive/Readme.md",
+    "wiki/poc-address.md",
+    "copilot/copilot-conversations/agent__in_the_wiki_folder_there_should_be_a_description_of@20260929_121801.md",
+    "copilot/copilot-conversations",
     "raw/Readme.md",
     "POC",
     "copilot/projects/POC-Address/project.md",
@@ -216,7 +220,6 @@
     "copilot/skills/obsidian-bases/LICENSE",
     "copilot/skills/obsidian-bases/references/EXAMPLES.md",
     "copilot/skills/obsidian-bases/references/FUNCTIONS_REFERENCE.md",
-    "copilot/skills/obsidian-bases/references",
     "copilot/skills/obsidian-markdown/SKILL.md",
     "copilot/skills/obsidian-markdown/references/PROPERTIES.md",
     "copilot/skills/obsidian-markdown/references/EMBEDS.md",
@@ -231,7 +234,6 @@
     "prompts/translate.md",
     "README.md",
     "AGENTS.md",
-    "wiki/housing/addressing.md",
-    "CLAUDE.md"
+    "wiki/housing/addressing.md"
   ]
 }
