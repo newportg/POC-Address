@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "9e2fce2f231876fb",
+        "id": "6a7829faf46fccb0",
         "type": "tabs",
         "children": [
           {
-            "id": "b79698e09645310d",
+            "id": "a37e985b33a96ce7",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "prompts/translate.md",
-                "mode": "preview",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "translate"
+              "title": "New tab"
             }
           }
         ]
@@ -169,13 +165,23 @@
               "icon": "lucide-list",
               "title": "Outline"
             }
+          },
+          {
+            "id": "38cb4dc00bab30b5",
+            "type": "leaf",
+            "state": {
+              "type": "copilot-agent-chat-view",
+              "state": {},
+              "icon": "copilot-agent",
+              "title": "Copilot Agent"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 616.833251953125
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -185,15 +191,47 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "bases:Create new base": false,
+      "copilot:Open Copilot Agent Chat": false,
+      "obsidian-git:Open Git source control": false,
+      "templater-obsidian:Templater": false
     }
   },
-  "active": "b79698e09645310d",
+  "active": "38cb4dc00bab30b5",
   "lastOpenFiles": [
+    "raw/Readme.md",
+    "POC",
+    "copilot/projects/POC-Address/project.md",
+    "copilot/projects/POC-Address",
+    "copilot/projects",
+    "copilot/skills/obsidian-cli/SKILL.md",
+    "copilot/skills/obsidian-cli/LICENSE",
+    "copilot/skills/obsidian-cli",
+    "copilot/skills/json-canvas/SKILL.md",
+    "copilot/skills/json-canvas/LICENSE",
+    "copilot/skills/json-canvas/references/EXAMPLES.md",
+    "copilot/skills/json-canvas/references",
+    "copilot/skills/json-canvas",
+    "copilot/skills/obsidian-bases/SKILL.md",
+    "copilot/skills/obsidian-bases/LICENSE",
+    "copilot/skills/obsidian-bases/references/EXAMPLES.md",
+    "copilot/skills/obsidian-bases/references/FUNCTIONS_REFERENCE.md",
+    "copilot/skills/obsidian-bases/references",
+    "copilot/skills/obsidian-markdown/SKILL.md",
+    "copilot/skills/obsidian-markdown/references/PROPERTIES.md",
+    "copilot/skills/obsidian-markdown/references/EMBEDS.md",
+    "copilot/skills/obsidian-markdown/references/CALLOUTS.md",
+    "copilot/skills/openartifacts-publish/SKILL.md",
+    "copilot/skills/openartifacts-publish/themes/research-memo.md",
+    "copilot/skills/copilot-fetch-x/SKILL.md",
+    "copilot/skills/copilot-youtube-transcript/SKILL.md",
+    "copilot/skills/copilot-read-pdf/SKILL.md",
+    "copilot/skills/copilot-web-fetch/SKILL.md",
+    "copilot/skills/copilot-web-search/SKILL.md",
+    "prompts/translate.md",
     "README.md",
     "AGENTS.md",
     "wiki/housing/addressing.md",
-    "CLAUDE.md",
-    "prompts/translate.md"
+    "CLAUDE.md"
   ]
 }

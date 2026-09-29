@@ -52,3 +52,5 @@ Read `README.md` first. This the source of truth for the system. This file gives
 - External API calls outside of declared automations.
 - Anything touching accounts, payments, or auth.
 - Editing files in `/raw` or `/archive`.
+
+@AGENTS.md
