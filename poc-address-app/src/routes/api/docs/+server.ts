@@ -118,6 +118,13 @@ export const GET: RequestHandler = async () => {
 							schema: { type: 'string' },
 							description: 'Address description (locality, postcode)',
 						},
+						{
+							name: 'country',
+							in: 'query',
+							required: false,
+							schema: { type: 'string' },
+							description: 'Country name (e.g., "United Kingdom")',
+						},
 					],
 					responses: {
 						'200': {
@@ -135,6 +142,7 @@ export const GET: RequestHandler = async () => {
 													Address: { type: 'string' },
 													Address1: { type: 'string' },
 													Address2: { type: 'string' },
+													AddressFormat: { type: 'string' },
 													Organisation: { type: 'string' },
 													Building: { type: 'string' },
 													Premise: { type: 'string' },

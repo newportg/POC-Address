@@ -5,6 +5,30 @@ import type { AddressResult } from '$lib/types';
 const LOQATE_API_KEY = process.env.LOQATE_API_KEY || 'BY92-NN99-ER43-XT19';
 const LOQATE_FIND_URL = 'https://api.addressy.com/Capture/Interactive/Find/v1.20/json6.ws';
 
+// Country name to ISO 3166-1 alpha-2 code mapping
+const COUNTRY_NAME_TO_ISO: Record<string, string> = {
+	'united kingdom': 'GB',
+	'united states': 'US',
+	'germany': 'DE',
+	'france': 'FR',
+	'spain': 'ES',
+	'italy': 'IT',
+	'netherlands': 'NL',
+	'belgium': 'BE',
+	'ireland': 'IE',
+	'portugal': 'PT',
+	'austria': 'AT',
+	'switzerland': 'CH',
+	'poland': 'PL',
+	'sweden': 'SE',
+	'norway': 'NO',
+	'denmark': 'DK',
+	'finland': 'FI',
+	'australia': 'AU',
+	'canada': 'CA',
+	'new zealand': 'NZ',
+};
+
 interface LoqateItem {
 	Id: string;
 	Type: string;
@@ -41,7 +65,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	try {
 		// Map country name to ISO code for LOQATE
-		const countryCode = country === 'United Kingdom' ? 'GB' : country.substring(0, 2).toUpperCase();
+		const countryCode = COUNTRY_NAME_TO_ISO[country.toLowerCase()] || country.substring(0, 2).toUpperCase();
 
 		// First search
 		let items = await loqateFind(query, undefined, countryCode);

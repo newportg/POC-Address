@@ -54,7 +54,7 @@
 		selectedAddress = null;
 
 		try {
-			const url = `/api/retrieve?id=${encodeURIComponent(result.id)}&text=${encodeURIComponent(result.text)}&description=${encodeURIComponent(result.description || '')}`;
+			const url = `/api/retrieve?id=${encodeURIComponent(result.id)}&text=${encodeURIComponent(result.text)}&description=${encodeURIComponent(result.description || '')}&country=${encodeURIComponent(selectedCountry?.name || 'United Kingdom')}`;
 			const res = await fetch(url);
 			const data = await res.json();
 			// Create a plain object to avoid Proxy reactivity issues
@@ -62,6 +62,7 @@
 				id: data.id,
 				input: { ...data.input },
 				match: { ...data.match },
+				countryMask: data.countryMask,
 			};
 		} catch (err) {
 			console.error('[Page] retrieve error:', err);
@@ -119,7 +120,25 @@
 
 				{#if selectedAddress.match}
 					{@const m = selectedAddress.match}
-					<p class="address">{m.Address || ''}</p>
+
+					<!-- Formatted address using LOQATE AddressFormat field -->
+					{#if m.AddressFormat}
+						<div class="formatted-address">
+							{#each m.AddressFormat.split(/<br\s*\/?>/i) as formatLine}
+								{@const fields = formatLine.trim().split(/\s+/)}
+								{@const lineContent = fields.map((field: string) => {
+									if (field === '-') return '';
+									const val = m[field];
+									return val ? val : '';
+								}).filter(Boolean).join(' ')}
+								{#if lineContent}
+									<p class="address-line">{lineContent}</p>
+								{/if}
+							{/each}
+						</div>
+					{:else}
+						<p class="address">{m.Address || ''}</p>
+					{/if}
 
 					<div class="verification-badges">
 						{#if m.AQI}
@@ -133,50 +152,54 @@
 						{/if}
 					</div>
 
-					<dl class="components">
-						{#if m.Address}<dt>Address</dt><dd>{m.Address}</dd>{/if}
-						{#if m.Address1}<dt>Address 1</dt><dd>{m.Address1}</dd>{/if}
-						{#if m.Address2}<dt>Address 2</dt><dd>{m.Address2}</dd>{/if}
-						{#if m.Address3}<dt>Address 3</dt><dd>{m.Address3}</dd>{/if}
-						{#if m.Address4}<dt>Address 4</dt><dd>{m.Address4}</dd>{/if}
-						{#if m.Address5}<dt>Address 5</dt><dd>{m.Address5}</dd>{/if}
-						{#if m.DeliveryAddress}<dt>Delivery Address</dt><dd>{m.DeliveryAddress}</dd>{/if}
-						{#if m.DeliveryAddress1}<dt>Delivery Address 1</dt><dd>{m.DeliveryAddress1}</dd>{/if}
-						{#if m.DeliveryAddress2}<dt>Delivery Address 2</dt><dd>{m.DeliveryAddress2}</dd>{/if}
-						{#if m.Organisation}<dt>Organisation</dt><dd>{m.Organisation}</dd>{/if}
-						{#if m.Department}<dt>Department</dt><dd>{m.Department}</dd>{/if}
-						{#if m.Building}<dt>Building</dt><dd>{m.Building}</dd>{/if}
-						{#if m.Premise}<dt>Premise</dt><dd>{m.Premise}</dd>{/if}
-						{#if m.SubBuilding}<dt>Sub Building</dt><dd>{m.SubBuilding}</dd>{/if}
-						{#if m.Thoroughfare}<dt>Thoroughfare</dt><dd>{m.Thoroughfare}</dd>{/if}
-						{#if m.DependentThoroughfare}<dt>Dependent Thoroughfare</dt><dd>{m.DependentThoroughfare}</dd>{/if}
-						{#if m.Locality}<dt>Locality</dt><dd>{m.Locality}</dd>{/if}
-						{#if m.DependentLocality}<dt>Dependent Locality</dt><dd>{m.DependentLocality}</dd>{/if}
-						{#if m.DoubleDependentLocality}<dt>Double Dependent Locality</dt><dd>{m.DoubleDependentLocality}</dd>{/if}
-						{#if m.AdministrativeArea}<dt>Administrative Area</dt><dd>{m.AdministrativeArea}</dd>{/if}
-						{#if m.SubAdministrativeArea}<dt>Sub Administrative Area</dt><dd>{m.SubAdministrativeArea}</dd>{/if}
-						{#if m.SuperAdministrativeArea}<dt>Super Administrative Area</dt><dd>{m.SuperAdministrativeArea}</dd>{/if}
-						{#if m.PostalCode}<dt>Postal Code</dt><dd>{m.PostalCode}</dd>{/if}
-						{#if m.PostalCodePrimary}<dt>Postal Code Primary</dt><dd>{m.PostalCodePrimary}</dd>{/if}
-						{#if m.PostalCodeSecondary}<dt>Postal Code Secondary</dt><dd>{m.PostalCodeSecondary}</dd>{/if}
-						{#if m.PostBox}<dt>Post Box</dt><dd>{m.PostBox}</dd>{/if}
-						{#if m.CountryName}<dt>Country Name</dt><dd>{m.CountryName}</dd>{/if}
-						{#if m.ISO3166_2}<dt>ISO 3166-2</dt><dd>{m.ISO3166_2}</dd>{/if}
-						{#if m.ISO3166_3}<dt>ISO 3166-3</dt><dd>{m.ISO3166_3}</dd>{/if}
-						{#if m.ISO3166_N}<dt>ISO 3166-N</dt><dd>{m.ISO3166_N}</dd>{/if}
-						{#if m.Latitude}<dt>Latitude</dt><dd>{m.Latitude}</dd>{/if}
-						{#if m.Longitude}<dt>Longitude</dt><dd>{m.Longitude}</dd>{/if}
-						{#if m.GeoAccuracy}<dt>Geo Accuracy</dt><dd>{m.GeoAccuracy}</dd>{/if}
-						{#if m.GeoDistance}<dt>Geo Distance</dt><dd>{m.GeoDistance}</dd>{/if}
-						{#if m.AVC}<dt>AVC</dt><dd>{m.AVC}</dd>{/if}
-						{#if m.AQI}<dt>AQI</dt><dd>{m.AQI}</dd>{/if}
-						{#if m.MatchScore}<dt>Match Score</dt><dd>{m.MatchScore}</dd>{/if}
-						{#if m.MatchRuleLabel}<dt>Match Rule</dt><dd>{m.MatchRuleLabel}</dd>{/if}
-						{#if m.HyphenClass}<dt>Hyphen Class</dt><dd>{m.HyphenClass}</dd>{/if}
-						{#if m.Sequence}<dt>Sequence</dt><dd>{m.Sequence}</dd>{/if}
-						{#if m.Type}<dt>Type</dt><dd>{m.Type}</dd>{/if}
-						{#if m.DataLevel}<dt>Data Level</dt><dd>{m.DataLevel}</dd>{/if}
-					</dl>
+					<!-- All raw fields -->
+					<details class="raw-fields">
+						<summary>All Fields</summary>
+						<dl class="components">
+							{#if m.Address}<dt>Address</dt><dd>{m.Address}</dd>{/if}
+							{#if m.Address1}<dt>Address 1</dt><dd>{m.Address1}</dd>{/if}
+							{#if m.Address2}<dt>Address 2</dt><dd>{m.Address2}</dd>{/if}
+							{#if m.Address3}<dt>Address 3</dt><dd>{m.Address3}</dd>{/if}
+							{#if m.Address4}<dt>Address 4</dt><dd>{m.Address4}</dd>{/if}
+							{#if m.Address5}<dt>Address 5</dt><dd>{m.Address5}</dd>{/if}
+							{#if m.DeliveryAddress}<dt>Delivery Address</dt><dd>{m.DeliveryAddress}</dd>{/if}
+							{#if m.DeliveryAddress1}<dt>Delivery Address 1</dt><dd>{m.DeliveryAddress1}</dd>{/if}
+							{#if m.DeliveryAddress2}<dt>Delivery Address 2</dt><dd>{m.DeliveryAddress2}</dd>{/if}
+							{#if m.Organisation}<dt>Organisation</dt><dd>{m.Organisation}</dd>{/if}
+							{#if m.Department}<dt>Department</dt><dd>{m.Department}</dd>{/if}
+							{#if m.Building}<dt>Building</dt><dd>{m.Building}</dd>{/if}
+							{#if m.Premise}<dt>Premise</dt><dd>{m.Premise}</dd>{/if}
+							{#if m.SubBuilding}<dt>Sub Building</dt><dd>{m.SubBuilding}</dd>{/if}
+							{#if m.Thoroughfare}<dt>Thoroughfare</dt><dd>{m.Thoroughfare}</dd>{/if}
+							{#if m.DependentThoroughfare}<dt>Dependent Thoroughfare</dt><dd>{m.DependentThoroughfare}</dd>{/if}
+							{#if m.Locality}<dt>Locality</dt><dd>{m.Locality}</dd>{/if}
+							{#if m.DependentLocality}<dt>Dependent Locality</dt><dd>{m.DependentLocality}</dd>{/if}
+							{#if m.DoubleDependentLocality}<dt>Double Dependent Locality</dt><dd>{m.DoubleDependentLocality}</dd>{/if}
+							{#if m.AdministrativeArea}<dt>Administrative Area</dt><dd>{m.AdministrativeArea}</dd>{/if}
+							{#if m.SubAdministrativeArea}<dt>Sub Administrative Area</dt><dd>{m.SubAdministrativeArea}</dd>{/if}
+							{#if m.SuperAdministrativeArea}<dt>Super Administrative Area</dt><dd>{m.SuperAdministrativeArea}</dd>{/if}
+							{#if m.PostalCode}<dt>Postal Code</dt><dd>{m.PostalCode}</dd>{/if}
+							{#if m.PostalCodePrimary}<dt>Postal Code Primary</dt><dd>{m.PostalCodePrimary}</dd>{/if}
+							{#if m.PostalCodeSecondary}<dt>Postal Code Secondary</dt><dd>{m.PostalCodeSecondary}</dd>{/if}
+							{#if m.PostBox}<dt>Post Box</dt><dd>{m.PostBox}</dd>{/if}
+							{#if m.CountryName}<dt>Country Name</dt><dd>{m.CountryName}</dd>{/if}
+							{#if m.ISO3166_2}<dt>ISO 3166-2</dt><dd>{m.ISO3166_2}</dd>{/if}
+							{#if m.ISO3166_3}<dt>ISO 3166-3</dt><dd>{m.ISO3166_3}</dd>{/if}
+							{#if m.ISO3166_N}<dt>ISO 3166-N</dt><dd>{m.ISO3166_N}</dd>{/if}
+							{#if m.Latitude}<dt>Latitude</dt><dd>{m.Latitude}</dd>{/if}
+							{#if m.Longitude}<dt>Longitude</dt><dd>{m.Longitude}</dd>{/if}
+							{#if m.GeoAccuracy}<dt>Geo Accuracy</dt><dd>{m.GeoAccuracy}</dd>{/if}
+							{#if m.GeoDistance}<dt>Geo Distance</dt><dd>{m.GeoDistance}</dd>{/if}
+							{#if m.AVC}<dt>AVC</dt><dd>{m.AVC}</dd>{/if}
+							{#if m.AQI}<dt>AQI</dt><dd>{m.AQI}</dd>{/if}
+							{#if m.MatchScore}<dt>Match Score</dt><dd>{m.MatchScore}</dd>{/if}
+							{#if m.MatchRuleLabel}<dt>Match Rule</dt><dd>{m.MatchRuleLabel}</dd>{/if}
+							{#if m.HyphenClass}<dt>Hyphen Class</dt><dd>{m.HyphenClass}</dd>{/if}
+							{#if m.Sequence}<dt>Sequence</dt><dd>{m.Sequence}</dd>{/if}
+							{#if m.Type}<dt>Type</dt><dd>{m.Type}</dd>{/if}
+							{#if m.DataLevel}<dt>Data Level</dt><dd>{m.DataLevel}</dd>{/if}
+						</dl>
+					</details>
 				{/if}
 			</div>
 		{/if}
@@ -313,6 +336,47 @@
 		color: #0066cc;
 		margin-bottom: 15px;
 		white-space: pre-line;
+	}
+
+	.formatted-address {
+		background: #f8f9fa;
+		padding: 15px;
+		border-radius: 6px;
+		margin-bottom: 15px;
+		border-left: 4px solid #0066cc;
+	}
+
+	.address-line {
+		margin: 4px 0;
+		font-size: 15px;
+		color: #333;
+	}
+
+	.mask-info {
+		margin-top: 15px;
+		padding-top: 15px;
+		border-top: 1px solid #eee;
+	}
+
+	.mask-info h3 {
+		margin: 0 0 10px 0;
+		font-size: 14px;
+		color: #666;
+	}
+
+	.raw-fields {
+		margin-top: 15px;
+	}
+
+	.raw-fields summary {
+		cursor: pointer;
+		color: #666;
+		font-size: 14px;
+		padding: 8px 0;
+	}
+
+	.raw-fields summary:hover {
+		color: #333;
 	}
 
 	.verification-badges {

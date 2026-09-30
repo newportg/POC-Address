@@ -8,26 +8,34 @@ export const GET: RequestHandler = async ({ url }) => {
 	const id = url.searchParams.get('id');
 	const text = url.searchParams.get('text');
 	const description = url.searchParams.get('description');
+	const country = url.searchParams.get('country') || 'United Kingdom';
 
 	if (!id) {
 		throw error(400, 'Missing required parameter: id');
 	}
 
 	try {
+		// Construct full address from text and description
+		const fullAddress = [text, description].filter(Boolean).join(', ');
+
 		const payload = {
 			Key: LOQATE_API_KEY,
 			GeoCode: true,
 			Addresses: [
 				{
 					Id: id,
-					Address: text || '',
+					Address: fullAddress,
+					Address1: text || '',
 					Locality: description || '',
-					Country: 'United Kingdom',
+					Country: country,
 				},
 			],
 			Options: {
 				Process: 'Verify',
 				Enhance: false,
+				ServerOptions: {
+					OutputAddressFormat: 'YES',
+				},
 			},
 		};
 

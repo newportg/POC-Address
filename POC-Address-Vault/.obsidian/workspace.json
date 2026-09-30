@@ -201,8 +201,9 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "1abf89b3c24d5d52",
+  "active": "38cb4dc00bab30b5",
   "lastOpenFiles": [
+    "raw/AddressFormats.json",
     "archive/Readme.md",
     "wiki/poc-address.md",
     "copilot/copilot-conversations/agent__in_the_wiki_folder_there_should_be_a_description_of@20260929_121801.md",
@@ -237,7 +238,6 @@
     "copilot/skills/copilot-web-search/SKILL.md",
     "prompts/translate.md",
     "README.md",
-    "AGENTS.md",
-    "wiki/housing/addressing.md"
+    "AGENTS.md"
   ]
 }

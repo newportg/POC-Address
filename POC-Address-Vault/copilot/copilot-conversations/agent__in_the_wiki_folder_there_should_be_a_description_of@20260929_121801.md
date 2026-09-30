@@ -5,7 +5,7 @@ backendId: opencode
 projectId: "e317956f-8fbd-4df8-806d-533350f57a47"
 sessionId: "ses_f13a75b46ffep3Z6wDDit4eyDu"
 agentLabel: "POC project: Svelte client and LOQATE API"
-usage: '{"usedTokens":291793,"contextWindow":1000000,"updatedAt":1790772947969}'
+usage: '{"usedTokens":411263,"contextWindow":1000000,"updatedAt":1790787054799}'
 tags:
   - copilot-conversation
 ---
@@ -1555,5 +1555,420 @@ The dev server is running at `http://localhost:5173/`. Try accessing `http://loc
 **user**: can you update the wiki documentation
 [Timestamp: 2026/09/30 14:00:11]
 
-**ai**: 
+**ai**: Done. The wiki has been updated with the full API documentation.
+
+**What was updated:**
+
+- **Architecture** — now describes the Svelte SPA with Leaflet map
+- **APIs** — all three endpoints documented:
+  1. `GET /countries` — country list
+  2. `GET /search` — LOQATE Find API (interactive search)
+  3. `GET /retrieve` — LOQATE Verify API (verified address details)
+- **API Documentation** — Swagger UI at `/docs`, OpenAPI JSON at `/api/docs`
+- **LOQATE Find Flow** — recursive container drilling explained
+- **Address Detail** — returns components, geocoding, verification codes
+
+Committed as `wiki: update poc-address with full API documentation`.
 [Timestamp: 2026/09/30 14:00:11]
+
+**user**: in the raw directory there is a file AddressFormats.json the retrieve api should return the correct country mask json with the retrieved address data
+[Timestamp: 2026/09/30 15:17:04]
+
+**ai**: Now let me update the retrieve endpoint to return the country mask along with the address data.Now let me update the page to display the country mask and format the address according to it.Now let me update the template to display the country mask and format the address according to it.Now let me add styling for the formatted address and mask info.Done. The retrieve API now returns the country mask JSON along with the verified address data.
+
+**What was added:**
+
+1. **AddressFormats.json** — copied to `src/lib/` for import
+2. **Retrieve API** — now accepts `country` parameter and returns `countryMask` in the response
+3. **Page display** — shows:
+   - **Formatted address** using the country mask (e.g., for UK: Organization → PostBox → Building/SubBuilding → Thoroughfare/Premise → etc.)
+   - **Country mask info** — displays the mask structure for the selected country
+   - **All raw fields** — collapsible section with all LOQATE Verify API fields
+
+**Example for UK:**
+```
+Line1: Organization
+Line2: PostBox
+Line3: Building, SubBuilding
+Line4: Thoroughfare, Premise
+Line5: DependentThoroughfare
+Line6: DoubleDependentLocality
+Line7: DependentLocality
+Line8: PostalCode, Locality
+```
+
+The dev server is running at `http://localhost:5173/`. Try searching for an address, then click a result — the address detail section should now show the formatted address using the country mask.
+[Timestamp: 2026/09/30 15:17:04]
+
+**user**: the swagger doent include the country mask in the schema
+[Timestamp: 2026/09/30 15:24:14]
+
+**ai**: Done. The OpenAPI spec now includes the `countryMask` in the retrieve endpoint response schema.
+
+**What was updated:**
+
+- Added `country` parameter to the retrieve endpoint
+- Added `countryMask` object to the response schema with:
+  - `Country` — country name
+  - `ISO-3166-3` — 3-character ISO code
+  - `ISO-3166-2` — 2-character ISO code
+  - `Line1` through `Line9` — arrays of address field names
+
+The Swagger UI at `http://localhost:5173/docs` should now show the country mask schema in the retrieve endpoint documentation.
+[Timestamp: 2026/09/30 15:24:14]
+
+**user**: the retrieve api doesnt need the countryname parameter, as the loqate api returns the country in its data, and that should be used to identify the mask
+[Timestamp: 2026/09/30 15:28:31]
+
+**ai**: Now let me update the OpenAPI spec to remove the `country` parameter.Now let me also update the page to remove the country parameter from the retrieve call.Done. The retrieve API no longer requires the `country` parameter.
+
+**What changed:**
+
+1. **Retrieve API** — removed `country` parameter, now extracts country from LOQATE Verify response (`match.CountryName` or `match.ISO3166_2`) to find the correct mask
+2. **OpenAPI spec** — removed `country` parameter from the retrieve endpoint documentation
+3. **Page** — removed `country` parameter from the retrieve API call
+
+The flow is now:
+1. User searches → Address Search API returns results with country info
+2. User selects result → Address Detail API calls LOQATE Verify
+3. LOQATE returns verified address with country info
+4. API uses the country from LOQATE response to find the correct mask
+5. Returns verified address + country mask
+
+The dev server is running at `http://localhost:5173/`. The Swagger UI at `/docs` should now show the updated schema without the `country` parameter.
+[Timestamp: 2026/09/30 15:28:31]
+
+**user**: the returned information is clipped 'Cres' instead of 'Crescent' and the country is incorrect 'French Southern Territories'
+[Timestamp: 2026/09/30 15:40:51]
+
+**ai**: I see the issues. The text is being clipped because the LOQATE Verify API is truncating the address, and the country detection is using the wrong field. Let me fix both issues.Now let me also fix the text clipping issue by ensuring the full address text is sent to LOQATE.The text clipping issue is likely because the LOQATE Verify API is truncating the address. Let me check the search results to see if the text is being truncated there.The text clipping issue is likely because the LOQATE Verify API is truncating the address. Let me check the search results to see if the text is being truncated there.
+
+The issue is that the LOQATE Find API returns abbreviated text (e.g., "93 Teagues Cres" instead of "93 Teagues Crescent"). The Verify API then uses this abbreviated text. Let me fix this by using the full address from the search results.Fixed both issues:
+
+**1. Text clipping** — the retrieve API now constructs the full address by combining `text` and `description` before sending to LOQATE Verify. This ensures the complete address is passed (e.g., "93 Teagues Crescent, Trench Telford TF2 6RF" instead of just "93 Teagues Cres").
+
+**2. Incorrect country** — the country detection now:
+- Tries multiple field names (`CountryName`, `Country`, `CountryIso2`)
+- Falls back to ISO code matching
+- Uses partial name matching as a last resort
+- This should correctly identify "United Kingdom" instead of "French Southern Territories"
+
+The dev server is running at `http://localhost:5173/`. Try searching for an address and selecting a result — the address should now show the full text and the correct country mask.
+[Timestamp: 2026/09/30 15:40:51]
+
+**user**: the country is still incorrect 'French Southern Territories' and I still require all of the verify fields
+[Timestamp: 2026/09/30 15:46:12]
+
+**ai**: Let me debug the country issue and ensure all verify fields are returned.I see the issues. The country detection is still not working correctly, and I need to ensure all verify fields are returned. Let me fix both issues.Now let me update the page to display all verify fields.I see the issues. The country detection is still not working correctly, and I need to ensure all verify fields are returned. Let me fix both issues.
+
+Now let me update the page to display all verify fields dynamically.
+
+**Error:** Internal error: Error from provider (Console): Upstream request failed: Endpoint is unavailable.
+[Timestamp: 2026/09/30 15:46:12]
+
+**user**: what information are you passing to the verify API as it is not returning the correct information
+[Timestamp: 2026/09/30 15:54:40]
+
+**ai**: Here's what's currently being sent to the LOQATE Verify API:
+
+```json
+{
+  "Key": "BY92-NN99-ER43-XT19",
+  "GeoCode": true,
+  "Addresses": [
+    {
+      "Id": "GB|RM|B|24490784|ENG",
+      "Address": "93 Teagues Crescent, Trench Telford TF2 6RF",
+      "Address1": "93 Teagues Crescent",
+      "Locality": "Trench Telford TF2 6RF"
+    }
+  ],
+  "Options": {
+    "Process": "Verify",
+    "Enhance": false
+  }
+}
+```
+
+**The problem:** The `Locality` field is being set to the full description (`"Trench Telford TF2 6RF"`) which includes the postcode. LOQATE expects `Locality` to be just the town/city name, not the full address with postcode.
+
+**What LOQATE Verify expects:**
+- `Address1` — street address (e.g., "93 Teagues Crescent")
+- `Locality` — city/town only (e.g., "Telford")
+- `PostalCode` — postcode only (e.g., "TF2 6RF")
+- `Country` — country name or ISO code
+
+**Fix needed:** Parse the description to extract just the locality (town) and postcode separately, then pass them as separate fields to LOQATE.
+
+Would you like me to fix this by properly parsing the address components before sending to LOQATE Verify?
+[Timestamp: 2026/09/30 15:54:40]
+
+**user**: ok please revert the retreive api to accept the country parameter again
+[Timestamp: 2026/09/30 15:59:26]
+
+**ai**: Now let me update the page to pass the country parameter.Now let me update the OpenAPI spec to include the country parameter.Done. The retrieve API now accepts the `country` parameter again.
+
+**What was reverted:**
+
+1. **Retrieve API** — accepts `country` parameter, uses it to find the mask directly
+2. **Page** — passes `selectedCountry.name` to the retrieve API
+3. **OpenAPI spec** — includes `country` parameter in the retrieve endpoint
+
+The country is now determined by the user's selection in the dropdown, not by parsing the LOQATE response. This should fix the "French Southern Territories" issue.
+
+The dev server is running at `http://localhost:5173/`. Try searching for an address and selecting a result — the country mask should now be correct based on the selected country.
+[Timestamp: 2026/09/30 15:59:26]
+
+**user**: given the search critera of Spain, 08211 Barcelona the search returns a address in the uk
+[Timestamp: 2026/09/30 16:09:05]
+
+**ai**: I see the issue. The country code mapping is incorrect. For "Spain", it's using `country.substring(0, 2).toUpperCase()` which produces "SP" instead of "ES" (the correct ISO code for Spain).
+
+Let me fix this with a proper country name to ISO code mapping.Now let me update the code to use the mapping.Fixed. The country code mapping was incorrect — "Spain" was being converted to "SP" instead of "ES".
+
+**What was fixed:**
+
+- Added a `COUNTRY_NAME_TO_ISO` mapping object with correct ISO codes for all supported countries
+- Updated the search endpoint to use the mapping: `COUNTRY_NAME_TO_ISO[country.toLowerCase()]`
+- Now "Spain" correctly maps to "ES" instead of "SP"
+
+The dev server is running at `http://localhost:5173/`. Try searching for "08211 Barcelona" with Spain selected — it should now return Spanish addresses instead of UK addresses.
+[Timestamp: 2026/09/30 16:09:05]
+
+**user**: clicking on a spanish address in the list, the address detail doesnt open why?
+[Timestamp: 2026/09/30 16:12:41]
+
+**ai**: The issue is likely that the LOQATE Verify API is returning an error for Spanish addresses, or the response structure is different. Let me add error handling and logging to debug this.I've added logging to the retrieve endpoint. Please:
+
+1. Open your browser's developer console (F12)
+2. Search for a Spanish address (e.g., "08211 Barcelona")
+3. Click on a result in the list
+4. Check the console for `[LOQATE Verify Response]` log messages
+
+The logs will show:
+- The full JSON response from LOQATE Verify
+- Any errors that occur
+- The extracted item and match objects
+
+Can you share what the console shows? This will help me identify whether the issue is with the API response, the response handling, or something else.
+[Timestamp: 2026/09/30 16:12:41]
+
+**user**: runtime-HpXb0G29.js?v=a1de1585:2077 Uncaught TypeError: $.get(...).map is not a function
+
+	in <unknown>
+	in +page.svelte
+	in +layout.svelte
+	in root.svelte
+	in undefined
+
+    at +page.svelte:131:39
+    at consequent_3 (+page.svelte:135:38)
+[Timestamp: 2026/09/30 16:15:59]
+
+**ai**: The error is because some mask lines are strings instead of arrays. For example, Spain might have `"Line1": "Organization"` instead of `"Line1": ["Organization"]`. Let me fix this.Fixed. The error was because some mask lines in `AddressFormats.json` are strings instead of arrays (e.g., `"Line1": "Organization"` instead of `"Line1": ["Organization"]`).
+
+**What changed:**
+
+- Added `Array.isArray(mask[lineKey]) ? mask[lineKey] : [mask[lineKey]]` to handle both string and array values
+- Now the code works whether the mask line is a string or an array
+
+The dev server is running at `http://localhost:5173/`. Try clicking on a Spanish address — the address detail should now open and display the formatted address using the country mask.
+[Timestamp: 2026/09/30 16:15:59]
+
+**user**: runtime-HpXb0G29.js?v=a1de1585:2077 Uncaught TypeError: $.get(...)[lineKey].join is not a function
+
+	in <unknown>
+	in +page.svelte
+	in +layout.svelte
+	in root.svelte
+	in undefined
+
+    at +page.svelte:166:30
+[Timestamp: 2026/09/30 16:18:18]
+
+**ai**: Fixed. The same issue was in the mask info section — some mask lines are strings instead of arrays, so `.join()` was failing.
+
+**What changed:**
+
+- Added `Array.isArray(mask[lineKey]) ? mask[lineKey] : [mask[lineKey]]` to normalize the value to an array before calling `.join()`
+
+The dev server is running at `http://localhost:5173/`. Try clicking on a Spanish address — the address detail should now open without errors.
+[Timestamp: 2026/09/30 16:18:18]
+
+**user**: The address at the top of the address detail section should be formulated data return  and following the format of the  country mask
+[Timestamp: 2026/09/30 16:21:58]
+
+**ai**: I see the issue. The formatted address is already at the top, but it may not be working correctly because the field names in the LOQATE response don't match the mask field names. Let me fix this by mapping the LOQATE fields to the mask fields correctly.Fixed. The formatted address at the top of the detail section now:
+
+1. **Uses the country mask** to determine which fields go on which line
+2. **Maps mask field names to LOQATE response field names** (e.g., "Organization" → "Organisation")
+3. **Pulls values from the LOQATE Verify API response** using the mapped field names
+4. **Displays the formatted address** with each line following the mask format
+
+For example, for UK:
+```
+Line1: Organisation
+Line2: PostBox
+Line3: Building SubBuilding
+Line4: Thoroughfare Premise
+Line5: DependentThoroughfare
+Line6: DoubleDependentLocality
+Line7: DependentLocality
+Line8: PostalCode Locality
+```
+
+The dev server is running at `http://localhost:5173/`. Try clicking on an address — the formatted address at the top should now display correctly using the country mask format.
+[Timestamp: 2026/09/30 16:21:58]
+
+**user**: which loqate api id the retrieve api using
+[Timestamp: 2026/09/30 16:32:46]
+
+**ai**: The retrieve API is using the **LOQATE Verify API** (International Batch Cleanse):
+
+```
+POST https://api.addressy.com/Cleansing/International/Batch/v1.20/json6.ws
+```
+
+This is the **Address Verify** service that validates and cleanses addresses against reference datasets. It returns:
+- Verified/formatted address
+- Address components
+- Geocoding data (lat/lng)
+- Verification codes (AVC, AQI, match score)
+
+**Note:** This is a different API from the search endpoint, which uses:
+```
+GET https://api.addressy.com/Capture/Interactive/Find/v1.20/json6.ws
+```
+
+The Find API is for interactive type-ahead search, while the Verify API is for validating and cleansing addresses.
+[Timestamp: 2026/09/30 16:32:46]
+
+**user**: the verify api should include the option Options.ServerOptions.OutputAddressFormat
+enum set to YES. And the client Address detail pane should use the AddressFormat field to formulate the address
+[Timestamp: 2026/09/30 16:58:22]
+
+**ai**: Now let me update the page to use the `AddressFormat` field from the response.Done. Two changes were made:
+
+**1. Retrieve API** — added `ServerOptions.OutputAddressFormat: 'YES'` to the LOQATE Verify request. This tells LOQATE to include the `AddressFormat` field in the response, which contains the field mapping used to construct the formatted address.
+
+**2. Address detail pane** — now uses `m.AddressFormat` to formulate the address:
+- If `AddressFormat` is available, it iterates through each line and pulls the corresponding field values from the LOQATE response
+- Falls back to the country mask if `AddressFormat` is not available
+- Falls back to `m.Address` if neither is available
+
+The `AddressFormat` field from LOQATE is an array of arrays, where each inner array contains the field names for that line. For example:
+```json
+[
+  ["Organisation"],
+  ["Building", "Premise", "Thoroughfare"],
+  ["Locality", "PostalCode"]
+]
+```
+
+The dev server is running at `http://localhost:5173/`. Try clicking on an address — the formatted address at the top should now use the LOQATE `AddressFormat` field.
+[Timestamp: 2026/09/30 16:58:22]
+
+**user**: runtime-HpXb0G29.js?v=a1de1585:2077 Uncaught TypeError: $.get(...).map is not a function
+
+	in <unknown>
+	in +page.svelte
+	in +layout.svelte
+	in root.svelte
+	in undefined
+
+    at +page.svelte:129:42
+    at +page.svelte:133:37
+[Timestamp: 2026/09/30 17:01:40]
+
+**ai**: The error is because `AddressFormat` might not be an array of arrays. Let me fix this by normalizing the format.Fixed. The error was because `{@const}` must be the immediate child of `{#each}`. I moved the normalization inline:
+
+```svelte
+{#each (Array.isArray(m.AddressFormat) ? m.AddressFormat : [m.AddressFormat]) as formatLine}
+```
+
+This ensures `AddressFormat` is always treated as an array, and each `formatLine` is also normalized to an array before calling `.map()`.
+
+The dev server is running at `http://localhost:5173/`. Try clicking on an address — the formatted address should now display correctly using the LOQATE `AddressFormat` field.
+[Timestamp: 2026/09/30 17:01:40]
+
+**user**: addressformat is not included in the detail
+[Timestamp: 2026/09/30 17:07:57]
+
+**ai**: Let me add debugging to see what the LOQATE Verify API is actually returning.The `AddressFormat` field is not being returned by LOQATE. Let me check the LOQATE documentation to see the correct way to enable it.I see the issue. Looking at the LOQATE documentation, `AddressFormat` is a **string** with field names separated by `<BR>` (or the configured `AddressLineSeparator`), not an array of arrays. Let me fix this.Fixed. The `AddressFormat` field from LOQATE is a **string** with field names separated by `<BR>` tags, not an array of arrays.
+
+**What changed:**
+
+- Split `AddressFormat` by `<BR>` tags (case-insensitive): `m.AddressFormat.split(/<br\s*\/?>/i)`
+- For each line, split by whitespace to get field names: `formatLine.trim().split(/\s+/)`
+- Use those field names to pull values from the LOQATE response
+
+For example, if LOQATE returns:
+```
+AddressFormat: "Organization<BR>DeliveryAddress<BR>Locality AdministrativeArea PostalCode"
+```
+
+The formatted address will be:
+```
+Line1: Organisation value
+Line2: DeliveryAddress value
+Line3: Locality + AdministrativeArea + PostalCode values
+```
+
+The dev server is running at `http://localhost:5173/`. Try clicking on an address — the formatted address should now display correctly using the LOQATE `AddressFormat` field.
+[Timestamp: 2026/09/30 17:07:57]
+
+**user**: remove the mask element from the retrieve return json
+[Timestamp: 2026/09/30 17:15:51]
+
+**ai**: Now let me update the page to remove the mask-related code.
+
+**Error:** Internal error: Error from provider (Console): Upstream request failed: Endpoint is unavailable.
+[Timestamp: 2026/09/30 17:15:51]
+
+**user**: can you cache the retrieve responses in a database so that you dont make multiple loqate requests for the same address
+[Timestamp: 2026/09/30 17:23:35]
+
+**ai**: **Error:** Internal error: Error from provider (Console): Upstream request failed: Endpoint is unavailable.
+[Timestamp: 2026/09/30 17:23:35]
+
+**user**: the Retrieve API in the swagger still has the countryMask
+[Timestamp: 2026/09/30 17:28:57]
+
+**ai**: **Error:** Internal error: Error from provider (Console): Upstream request failed: Endpoint is unavailable.
+[Timestamp: 2026/09/30 17:28:57]
+
+**user**: Error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mExpected `,` or `}` but found `)`
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/routes/api/docs/+server.ts:170:3 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m  5 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mj[0m[38;5;249ms[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m([0m{
+ [38;5;240m    │[0m                 ┬  
+ [38;5;240m    │[0m                 ╰── Opened here
+ [38;5;240m    │[0m 
+ [38;5;246m170 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m}[0m)[38;5;249m;[0m
+ [38;5;240m    │[0m      ┬  
+ [38;5;240m    │[0m      ╰── `,` or `}` expected
+[38;5;246m─────╯[0m
+
+    at transformWithOxc (file:///C:/Source/Obsidian/Projects/POC-Address/poc-address-app/node_modules/vite/dist/node/chunks/node.js:7551:19)
+    at TransformPluginContext.transform (file:///C:/Source/Obsidian/Projects/POC-Address/poc-address-app/node_modules/vite/dist/node/chunks/node.js:7623:26)
+    at EnvironmentPluginContainer.transform (file:///C:/Source/Obsidian/Projects/POC-Address/poc-address-app/node_modules/vite/dist/node/chunks/node.js:8515:51)
+    at async loadAndTransform (file:///C:/Source/Obsidian/Projects/POC-Address/poc-address-app/node_modules/vite/dist/node/chunks/node.js:19998:26)
+    at async fetchModule (file:///C:/Source/Obsidian/Projects/POC-Address/poc-address-app/node_modules/vite/dist/node/chunks/node.js:35894:15)
+    at async handleInvoke (file:///C:/Source/Obsidian/Projects/POC-Address/poc-address-app/node_modules/vite/dist/node/chunks/node.js:25138:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///C:/Source/Obsidian/Projects/POC-Address/poc-address-app/node_modules/vite/dist/node/chunks/node.js:25193:13)
+[Timestamp: 2026/09/30 17:34:49]
+
+**ai**: 
+
+The edit tool keeps failing due to indentation mismatches. Let me rewrite the entire docs file cleanly.Fixed. The OpenAPI spec file had a syntax error from the previous countryMask removal — an extra closing brace. I rewrote the file cleanly.
+
+**What's fixed:**
+
+- Removed `countryMask` from the retrieve endpoint response schema in Swagger
+- Added `AddressFormat` to the match schema (the field used to formulate the address)
+- Cleaned up the syntax error
+
+The Swagger UI at `http://localhost:5173/docs` should now show the retrieve endpoint without `countryMask` in the response schema.
+[Timestamp: 2026/09/30 17:34:49]
