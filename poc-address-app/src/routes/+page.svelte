@@ -54,17 +54,14 @@
 		selectedAddress = null;
 
 		try {
-			const url = `/api/retrieve?id=${encodeURIComponent(result.id)}`;
+			const url = `/api/retrieve?id=${encodeURIComponent(result.id)}&text=${encodeURIComponent(result.text)}&description=${encodeURIComponent(result.description || '')}`;
 			const res = await fetch(url);
 			const data = await res.json();
 			// Create a plain object to avoid Proxy reactivity issues
 			selectedAddress = {
 				id: data.id,
-				label: data.label,
-				address: data.address,
-				components: { ...data.components },
-				type: data.type,
-				dataLevel: data.dataLevel,
+				input: { ...data.input },
+				match: { ...data.match },
 			};
 		} catch (err) {
 			console.error('[Page] retrieve error:', err);
@@ -118,46 +115,67 @@
 
 		{#if selectedAddress}
 			<div class="selected-address">
-				<h2>Selected Address</h2>
-				<p class="address">{selectedAddress.label || selectedAddress.address}</p>
-				{#if selectedAddress.components}
+				<h2>Verified Address</h2>
+
+				{#if selectedAddress.match}
+					{@const m = selectedAddress.match}
+					<p class="address">{m.Address || ''}</p>
+
+					<div class="verification-badges">
+						{#if m.AQI}
+							<span class="badge" class:verified={m.AQI === 'A'}>AQI: {m.AQI}</span>
+						{/if}
+						{#if m.AVC}
+							<span class="badge">AVC: {m.AVC}</span>
+						{/if}
+						{#if m.MatchScore}
+							<span class="badge">Match Score: {m.MatchScore}</span>
+						{/if}
+					</div>
+
 					<dl class="components">
-						{#if selectedAddress.components.organisation}
-							<dt>Organisation</dt>
-							<dd>{selectedAddress.components.organisation}</dd>
-						{/if}
-						{#if selectedAddress.components.buildingName}
-							<dt>Building</dt>
-							<dd>{selectedAddress.components.buildingName}</dd>
-						{/if}
-						{#if selectedAddress.components.buildingNumber}
-							<dt>Number</dt>
-							<dd>{selectedAddress.components.buildingNumber}</dd>
-						{/if}
-						{#if selectedAddress.components.street}
-							<dt>Street</dt>
-							<dd>{selectedAddress.components.street}</dd>
-						{/if}
-						{#if selectedAddress.components.district}
-							<dt>District</dt>
-							<dd>{selectedAddress.components.district}</dd>
-						{/if}
-						{#if selectedAddress.components.city}
-							<dt>City</dt>
-							<dd>{selectedAddress.components.city}</dd>
-						{/if}
-						{#if selectedAddress.components.province}
-							<dt>Province</dt>
-							<dd>{selectedAddress.components.province}</dd>
-						{/if}
-						{#if selectedAddress.components.postalCode}
-							<dt>Postcode</dt>
-							<dd>{selectedAddress.components.postalCode}</dd>
-						{/if}
-						{#if selectedAddress.components.country}
-							<dt>Country</dt>
-							<dd>{selectedAddress.components.country}</dd>
-						{/if}
+						{#if m.Address}<dt>Address</dt><dd>{m.Address}</dd>{/if}
+						{#if m.Address1}<dt>Address 1</dt><dd>{m.Address1}</dd>{/if}
+						{#if m.Address2}<dt>Address 2</dt><dd>{m.Address2}</dd>{/if}
+						{#if m.Address3}<dt>Address 3</dt><dd>{m.Address3}</dd>{/if}
+						{#if m.Address4}<dt>Address 4</dt><dd>{m.Address4}</dd>{/if}
+						{#if m.Address5}<dt>Address 5</dt><dd>{m.Address5}</dd>{/if}
+						{#if m.DeliveryAddress}<dt>Delivery Address</dt><dd>{m.DeliveryAddress}</dd>{/if}
+						{#if m.DeliveryAddress1}<dt>Delivery Address 1</dt><dd>{m.DeliveryAddress1}</dd>{/if}
+						{#if m.DeliveryAddress2}<dt>Delivery Address 2</dt><dd>{m.DeliveryAddress2}</dd>{/if}
+						{#if m.Organisation}<dt>Organisation</dt><dd>{m.Organisation}</dd>{/if}
+						{#if m.Department}<dt>Department</dt><dd>{m.Department}</dd>{/if}
+						{#if m.Building}<dt>Building</dt><dd>{m.Building}</dd>{/if}
+						{#if m.Premise}<dt>Premise</dt><dd>{m.Premise}</dd>{/if}
+						{#if m.SubBuilding}<dt>Sub Building</dt><dd>{m.SubBuilding}</dd>{/if}
+						{#if m.Thoroughfare}<dt>Thoroughfare</dt><dd>{m.Thoroughfare}</dd>{/if}
+						{#if m.DependentThoroughfare}<dt>Dependent Thoroughfare</dt><dd>{m.DependentThoroughfare}</dd>{/if}
+						{#if m.Locality}<dt>Locality</dt><dd>{m.Locality}</dd>{/if}
+						{#if m.DependentLocality}<dt>Dependent Locality</dt><dd>{m.DependentLocality}</dd>{/if}
+						{#if m.DoubleDependentLocality}<dt>Double Dependent Locality</dt><dd>{m.DoubleDependentLocality}</dd>{/if}
+						{#if m.AdministrativeArea}<dt>Administrative Area</dt><dd>{m.AdministrativeArea}</dd>{/if}
+						{#if m.SubAdministrativeArea}<dt>Sub Administrative Area</dt><dd>{m.SubAdministrativeArea}</dd>{/if}
+						{#if m.SuperAdministrativeArea}<dt>Super Administrative Area</dt><dd>{m.SuperAdministrativeArea}</dd>{/if}
+						{#if m.PostalCode}<dt>Postal Code</dt><dd>{m.PostalCode}</dd>{/if}
+						{#if m.PostalCodePrimary}<dt>Postal Code Primary</dt><dd>{m.PostalCodePrimary}</dd>{/if}
+						{#if m.PostalCodeSecondary}<dt>Postal Code Secondary</dt><dd>{m.PostalCodeSecondary}</dd>{/if}
+						{#if m.PostBox}<dt>Post Box</dt><dd>{m.PostBox}</dd>{/if}
+						{#if m.CountryName}<dt>Country Name</dt><dd>{m.CountryName}</dd>{/if}
+						{#if m.ISO3166_2}<dt>ISO 3166-2</dt><dd>{m.ISO3166_2}</dd>{/if}
+						{#if m.ISO3166_3}<dt>ISO 3166-3</dt><dd>{m.ISO3166_3}</dd>{/if}
+						{#if m.ISO3166_N}<dt>ISO 3166-N</dt><dd>{m.ISO3166_N}</dd>{/if}
+						{#if m.Latitude}<dt>Latitude</dt><dd>{m.Latitude}</dd>{/if}
+						{#if m.Longitude}<dt>Longitude</dt><dd>{m.Longitude}</dd>{/if}
+						{#if m.GeoAccuracy}<dt>Geo Accuracy</dt><dd>{m.GeoAccuracy}</dd>{/if}
+						{#if m.GeoDistance}<dt>Geo Distance</dt><dd>{m.GeoDistance}</dd>{/if}
+						{#if m.AVC}<dt>AVC</dt><dd>{m.AVC}</dd>{/if}
+						{#if m.AQI}<dt>AQI</dt><dd>{m.AQI}</dd>{/if}
+						{#if m.MatchScore}<dt>Match Score</dt><dd>{m.MatchScore}</dd>{/if}
+						{#if m.MatchRuleLabel}<dt>Match Rule</dt><dd>{m.MatchRuleLabel}</dd>{/if}
+						{#if m.HyphenClass}<dt>Hyphen Class</dt><dd>{m.HyphenClass}</dd>{/if}
+						{#if m.Sequence}<dt>Sequence</dt><dd>{m.Sequence}</dd>{/if}
+						{#if m.Type}<dt>Type</dt><dd>{m.Type}</dd>{/if}
+						{#if m.DataLevel}<dt>Data Level</dt><dd>{m.DataLevel}</dd>{/if}
 					</dl>
 				{/if}
 			</div>
@@ -295,6 +313,27 @@
 		color: #0066cc;
 		margin-bottom: 15px;
 		white-space: pre-line;
+	}
+
+	.verification-badges {
+		display: flex;
+		gap: 10px;
+		margin-bottom: 15px;
+		flex-wrap: wrap;
+	}
+
+	.badge {
+		padding: 4px 10px;
+		border-radius: 4px;
+		font-size: 12px;
+		font-weight: 600;
+		background: #e0e0e0;
+		color: #333;
+	}
+
+	.badge.verified {
+		background: #4caf50;
+		color: white;
 	}
 
 	.components {
