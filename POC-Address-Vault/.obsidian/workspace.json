@@ -203,6 +203,7 @@
   },
   "active": "38cb4dc00bab30b5",
   "lastOpenFiles": [
+    "wiki/poc-address-design.md",
     "raw/AddressFormats.json",
     "archive/Readme.md",
     "wiki/poc-address.md",
@@ -222,7 +223,6 @@
     "copilot/skills/json-canvas/references",
     "copilot/skills/json-canvas",
     "copilot/skills/obsidian-bases/SKILL.md",
-    "copilot/skills/obsidian-bases/LICENSE",
     "copilot/skills/obsidian-bases/references/EXAMPLES.md",
     "copilot/skills/obsidian-bases/references/FUNCTIONS_REFERENCE.md",
     "copilot/skills/obsidian-markdown/SKILL.md",
