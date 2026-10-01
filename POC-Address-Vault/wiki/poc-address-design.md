@@ -57,7 +57,6 @@ graph LR
     subgraph Lib
         TYPES[types.ts]
         CACHE[cache.ts]
-        FORMATS[AddressFormats.json]
     end
 
     subgraph API

@@ -1,5 +1,6 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { getCachedResponse, setCachedResponse } from '$lib/cache';
 
 const LOQATE_API_KEY = process.env.LOQATE_API_KEY || 'BY92-NN99-ER43-XT19';
 const LOQATE_VERIFY_URL = 'https://api.addressy.com/Cleansing/International/Batch/v1.20/json6.ws';
@@ -15,6 +16,15 @@ export const GET: RequestHandler = async ({ url }) => {
 	}
 
 	try {
+		// Check cache first
+		const cached = getCachedResponse(id);
+		if (cached) {
+			console.log('[Cache] Hit for id:', id);
+			return json(cached);
+		}
+
+		console.log('[Cache] Miss for id:', id);
+
 		// Construct full address from text and description
 		const fullAddress = [text, description].filter(Boolean).join(', ');
 
@@ -55,12 +65,18 @@ export const GET: RequestHandler = async ({ url }) => {
 			throw error(404, item?.Description || 'Address not found');
 		}
 
-		// Return all fields from the verify response
-		return json({
+		// Build response
+		const result = {
 			id: item.Id || id,
 			input: item.Input || {},
 			match: match || {},
-		});
+		};
+
+		// Store in cache
+		setCachedResponse(id, result);
+		console.log('[Cache] Stored response for id:', id);
+
+		return json(result);
 	} catch (err) {
 		console.error('LOQATE verify error:', err);
 		throw error(500, 'Failed to verify address');

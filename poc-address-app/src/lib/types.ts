@@ -8,6 +8,8 @@ export interface AddressResult {
 	id: string;
 	text: string;
 	description?: string;
+	latitude?: number;
+	longitude?: number;
 }
 
 export interface SearchResponse {

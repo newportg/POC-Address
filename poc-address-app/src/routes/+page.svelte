@@ -11,6 +11,7 @@
 	let selectedAddress = $state<any>(null);
 	let retrieving = $state(false);
 	let selectedResultId = $state<string | null>(null);
+	let selectedCoordinates = $state<[number, number] | null>(null);
 
 	$effect(() => {
 		fetchCountries();
@@ -34,6 +35,7 @@
 		results = [];
 		selectedAddress = null;
 		selectedResultId = null;
+		selectedCoordinates = null;
 
 		try {
 			const res = await fetch(
@@ -50,6 +52,7 @@
 
 	async function selectProperty(result: AddressResult) {
 		selectedResultId = result.id;
+		selectedCoordinates = null;
 		retrieving = true;
 		selectedAddress = null;
 
@@ -64,6 +67,16 @@
 				match: { ...data.match },
 				countryMask: data.countryMask,
 			};
+			const latitudeValue = data.match?.Latitude;
+			const longitudeValue = data.match?.Longitude;
+			const latitude = Number(latitudeValue);
+			const longitude = Number(longitudeValue);
+			selectedCoordinates = latitudeValue != null && String(latitudeValue).trim() !== ''
+				&& longitudeValue != null && String(longitudeValue).trim() !== ''
+				&& Number.isFinite(latitude) && Number.isFinite(longitude)
+				&& latitude >= -90 && latitude <= 90 && longitude >= -180 && longitude <= 180
+				? [latitude, longitude]
+				: null;
 		} catch (err) {
 			console.error('[Page] retrieve error:', err);
 			error = 'Failed to retrieve address details';
@@ -108,7 +121,7 @@
 			<p class="error">{error}</p>
 		{/if}
 
-		<Map {results} selectedId={selectedResultId} onSelect={selectProperty} />
+		<Map {results} selectedId={selectedResultId} {selectedCoordinates} onSelect={selectProperty} />
 
 		{#if retrieving}
 			<p class="loading">Retrieving address...</p>

@@ -5,7 +5,6 @@ backendId: opencode
 projectId: "e317956f-8fbd-4df8-806d-533350f57a47"
 sessionId: "ses_f13a75b46ffep3Z6wDDit4eyDu"
 agentLabel: "POC project: Svelte client and LOQATE API"
-usage: '{"usedTokens":411263,"contextWindow":1000000,"updatedAt":1790787054799}'
 tags:
   - copilot-conversation
 ---
@@ -1974,5 +1973,47 @@ The Swagger UI at `http://localhost:5173/docs` should now show the retrieve endp
 **user**: can you create the design documentation including diagrams for this app in the wiki folder
 [Timestamp: 2026/10/01 10:55:51]
 
-**ai**: 
+**ai**: Done. Created `wiki/poc-address-design.md` with full design documentation including:
+
+**Diagrams (Mermaid):**
+- **Architecture diagram** — shows Client → API → LOQATE/Cache layers
+- **Component diagram** — pages, components, lib, and API routes
+- **Data flow sequence diagram** — user search → LOQATE Find → map markers → user select → cache check → LOQATE Verify → formatted display
+- **User flow flowchart** — page load through address detail display
+- **Database schema** — cache table structure
+
+**Documentation sections:**
+- API endpoints table
+- LOQATE integration details (Find + Verify APIs with parameters)
+- Address formatting logic (how `AddressFormat` is parsed and rendered)
+- Technology stack table
+
+Committed as `wiki: add design documentation with diagrams`.
 [Timestamp: 2026/10/01 10:55:51]
+
+**user**: does the cache actually work
+[Timestamp: 2026/10/01 11:05:45]
+
+**ai**: No — the cache was created but never wired into the retrieve endpoint. Let me fix that now.You're right — the cache was never wired in. Now it is.
+
+**What changed:**
+
+- Retrieve endpoint now imports `getCachedResponse` and `setCachedResponse` from `$lib/cache`
+- On request: checks SQLite cache by address `id` first
+- **Cache hit** → returns cached response immediately (no LOQATE call)
+- **Cache miss** → calls LOQATE Verify, stores response in cache, then returns it
+- Console logs `[Cache] Hit` / `[Cache] Miss` / `[Cache] Stored` so you can verify it's working
+
+**To test:**
+1. Open browser console (F12)
+2. Search for an address and click a result — you should see `[Cache] Miss` then `[Cache] Stored`
+3. Click the same address again — you should see `[Cache] Hit` and no LOQATE API call
+
+The cache database is at `.cache/address-cache.db` in the project root.
+[Timestamp: 2026/10/01 11:05:45]
+
+**user**: can this application be hosted in github pages or does it need a server environment
+[Timestamp: 2026/10/01 11:48:43]
+
+**ai**: **Error:** opencode's internal service stopped. Please try again.
+[Timestamp: 2026/10/01 11:48:43]

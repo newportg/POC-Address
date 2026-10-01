@@ -6,12 +6,12 @@
 	let map: any;
 	let L: any = null;
 	let markers: Map<string, any> = new Map();
-	let selectedMarkerId: string | null = null;
 	let mapReady = false;
 
-	let { results, selectedId, onSelect }: {
+	let { results, selectedId, selectedCoordinates, onSelect }: {
 		results: AddressResult[];
 		selectedId?: string | null;
+		selectedCoordinates?: [number, number] | null;
 		onSelect?: (result: AddressResult) => void;
 	} = $props();
 
@@ -33,86 +33,90 @@
 		mapReady = true;
 
 		// Initial render
-		render();
+		renderResults();
 	});
 
 	onDestroy(() => {
 		map?.remove();
 	});
 
-	// Watch for changes and re-render
+	// Rebuild markers and fit the complete result set when search results change.
 	$effect(() => {
-		render();
+		results;
+		renderResults();
 	});
 
-	function render() {
+	// Keep selection movement independent from fitting the search-result bounds.
+	$effect(() => {
+		updateSelection(selectedId, selectedCoordinates);
+	});
+
+	function renderResults() {
 		if (!mapReady || !map || !L) return;
 
 		// Clear existing markers
 		markers.forEach((m) => m.remove());
 		markers.clear();
-		selectedMarkerId = null;
 
 		const bounds = L.latLngBounds([]);
 
-		// Add markers for each result
-		results.forEach((result, index) => {
-			const coords = getFallbackCoords(index, result.text);
-
-			const marker = L.marker(coords)
-				.addTo(map)
-				.bindPopup(`<strong>${escapeHtml(result.text)}</strong><br>${escapeHtml(result.description || '')}`);
-
-			marker.on('click', () => {
-				onSelect?.(result);
-			});
-
-			markers.set(result.id, marker);
-			bounds.extend(coords);
+		// Fit the map to the real geocodes returned for the search results.
+		results.forEach((result) => {
+			const coordinates = getResultCoordinates(result);
+			if (coordinates) bounds.extend(coordinates);
 		});
 
-		// Zoom to fit all markers
-		if (markers.size > 0) {
-			map.fitBounds(bounds.pad(0.1), { animate: true });
-		}
-
-		// Handle selection
-		if (selectedId) {
-			const marker = markers.get(selectedId);
-			if (marker) {
-				selectedMarkerId = selectedId;
-				marker.setIcon(L.divIcon({
-					className: 'selected-marker',
-					html: '<div style="background:#ff6600;width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.3);"></div>',
-					iconSize: [30, 30],
-					iconAnchor: [15, 30],
-				}));
-				map.setView(marker.getLatLng(), 18, { animate: true });
-				marker.openPopup();
-			}
+		if (bounds.isValid()) {
+			map.fitBounds(bounds.pad(0.1), { animate: true, maxZoom: 16 });
 		}
 	}
 
-	function getFallbackCoords(index: number, text: string): [number, number] {
-		// Generate a hash from the address text to create a unique location per search
-		let hash = 0;
-		for (let i = 0; i < text.length; i++) {
-			hash = ((hash << 5) - hash) + text.charCodeAt(i);
-			hash = hash & hash;
+	function updateSelection(id?: string | null, coordinates?: [number, number] | null) {
+		if (!mapReady || !map || !L) return;
+
+		markers.forEach((existingMarker, markerId) => {
+			if (markerId !== id) {
+				existingMarker.remove();
+				markers.delete(markerId);
+			}
+		});
+		if (!id) return;
+
+		const result = results.find((item) => item.id === id);
+		if (!result) return;
+		const markerCoordinates = coordinates ?? getResultCoordinates(result);
+		if (!markerCoordinates) return;
+
+		let marker = markers.get(id);
+		if (!marker) {
+			marker = L.marker(markerCoordinates)
+				.addTo(map)
+				.bindPopup(`<strong>${escapeHtml(result.text)}</strong><br>${escapeHtml(result.description || '')}`);
+			marker.on('click', () => onSelect?.(result));
+			markers.set(id, marker);
 		}
 
-		// Use hash to create a base location (spread across UK)
-		const baseLat = 51.5 + (hash % 100) / 100;
-		const baseLng = -1.5 + ((hash >> 8) % 100) / 100;
+		if (coordinates) marker.setLatLng(coordinates);
+		marker.setIcon(L.divIcon({
+			className: 'selected-marker',
+			html: '<div style="background:#ff6600;width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.3);"></div>',
+			iconSize: [30, 30],
+			iconAnchor: [15, 30],
+		}));
+		map.stop();
+		map.setView(marker.getLatLng(), 18, { animate: true });
+		marker.openPopup();
+	}
 
-		// Spread markers in a grid pattern around the base location
-		const gridSize = Math.ceil(Math.sqrt(100));
-		const row = Math.floor(index / gridSize);
-		const col = index % gridSize;
-		const latOffset = (row - gridSize / 2) * 0.003;
-		const lngOffset = (col - gridSize / 2) * 0.003;
-
-		return [baseLat + latOffset, baseLng + lngOffset];
+	function getResultCoordinates(result: AddressResult): [number, number] | null {
+		const { latitude, longitude } = result;
+		if (
+			typeof latitude !== 'number' || typeof longitude !== 'number' ||
+			!Number.isFinite(latitude) || !Number.isFinite(longitude)
+		) {
+			return null;
+		}
+		return [latitude, longitude];
 	}
 
 	function escapeHtml(text: string): string {
