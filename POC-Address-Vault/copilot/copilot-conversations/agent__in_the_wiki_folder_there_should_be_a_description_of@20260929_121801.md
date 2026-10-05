@@ -2357,3 +2357,15 @@ The static HTML app should now display tiles correctly, matching the behavior of
 
 **ai**: **Error:** Internal error: Error from provider (Console): Rate limit exceeded. Please try again later.
 [Timestamp: 2026/10/05 15:33:07]
+
+**user**: what does rate limit exceeded mean
+[Timestamp: 2026/10/05 16:18:01]
+
+**ai**: 
+[Timestamp: 2026/10/05 16:18:01]
+
+**user**: can we add the static poc implementation to the international-addressing.html as another tab
+[Timestamp: 2026/10/05 16:20:47]
+
+**ai**: **Error:** Internal error: Error from provider (Console): Rate limit exceeded. Please try again later.
+[Timestamp: 2026/10/05 16:20:47]
