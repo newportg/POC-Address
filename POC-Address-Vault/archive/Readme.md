@@ -142,40 +142,44 @@ curl --request POST \
   "Addresses": [
     {
       "Department": "",
-      "PostalCode": "tf26rf",
+      "PostalCode": "EC2M 7NH",
       "Country": "United Kingdom",
-      "Address": "93 teagues crescent"
+      "Address": "1 Liverpool Street"
     }
   ]
 }
 ```
-```
-{  
-"Address": "93 Teagues Crescent<br>Trench<br>Telford<br>TF2 6RF",  
-"Address1": "93 Teagues Crescent",  
-"Address2": "Trench",  
-"Address3": "Telford",  
-"Address4": "TF2 6RF",  
-"DeliveryAddress": "93 Teagues Crescent<br>Trench",  
-"DeliveryAddress1": "93 Teagues Crescent",  
-"DeliveryAddress2": "Trench",  
-"AdministrativeArea": "Shropshire",  
-"Locality": "Telford",  
-"DependentLocality": "Trench",  
-"Thoroughfare": "Teagues Crescent",  
-"Premise": "93",  
-"PostalCode": "TF2 6RF",  
-"CountryName": "United Kingdom",  
-"ISO3166-2": "GB",  
-"ISO3166-3": "GBR",  
-"ISO3166-N": "826",  
-"PostalCodePrimary": "TF2 6RF",  
-"AVC": "V44-I44-P6-100",  
-"AQI": "A",  
-"Sequence": "1",  
-"MatchRuleLabel": "Rlfnp",  
-"HyphenClass": "B",  
-"PremiseNumber": "93",  
-"Country": "GB"  
-}
+```json
+{
+    "AQI": "A",
+    "AVC": "V44-I44-P6-100",
+    "Address": "1 Liverpool Street<br>London<br>EC2M 7NH",
+    "Address1": "1 Liverpool Street",
+    "Address2": "London",
+    "Address3": "EC2M 7NH",
+    "AddressFormat": "Premise Thoroughfare<br>Locality<br>PostalCode",
+    "AdministrativeArea": "London",
+    "Country": "GB",
+    "CountryName": "United Kingdom",
+    "DeliveryAddress": "1 Liverpool Street",
+    "DeliveryAddress1": "1 Liverpool Street",
+    "DeliveryAddressFormat": "Premise Thoroughfare",
+    "GeoAccuracy": "I4",
+    "GeoDistance": "0.0",
+    "HyphenClass": "B",
+    "ID": "GB|RM|B|52840932|ENG",
+    "ISO3166-2": "GB",
+    "ISO3166-3": "GBR",
+    "ISO3166-N": "826",
+    "Latitude": "51.517670",
+    "Locality": "London",
+    "Longitude": "-0.084339",
+    "MatchRuleLabel": "Rlh",
+    "PostalCode": "EC2M 7NH",
+    "PostalCodePrimary": "EC2M 7NH",
+    "Premise": "1",
+    "PremiseNumber": "1",
+    "Sequence": "1",
+    "Thoroughfare": "Liverpool Street"
+  }
 ```

@@ -318,7 +318,7 @@
   "inlineEditCommands": [],
   "projectList": [],
   "lastDismissedVersion": null,
-  "lastShownStartupVersion": null,
+  "lastShownStartupVersion": "4.0.13",
   "passMarkdownImages": true,
   "enableAutonomousAgent": true,
   "enableCustomPromptTemplating": true,
@@ -468,6 +468,24 @@
       },
       "configuredModelId": "398a563d-312a-48ab-a8a4-e36442d619a0",
       "configuredAt": 1790671616373
+    },
+    {
+      "providerId": "23e84d7f-9b99-4591-9ccd-5b81377f980c",
+      "info": {
+        "id": "opencode/fledge-alpha-free",
+        "displayName": "opencode/Fledge Alpha Free"
+      },
+      "configuredModelId": "a598bcca-9b13-417d-8dc2-2a2427e0e870",
+      "configuredAt": 1791201497467
+    },
+    {
+      "providerId": "23e84d7f-9b99-4591-9ccd-5b81377f980c",
+      "info": {
+        "id": "opencode/ling-3.1-flash-free",
+        "displayName": "opencode/Ling 3.1 Flash Free"
+      },
+      "configuredModelId": "703573dc-2c5a-42c7-8e04-db95012bb4ea",
+      "configuredAt": 1791201497468
     }
   ],
   "backends": {
@@ -499,25 +517,6 @@
         },
         "limits": {
           "context": 1048576
-        }
-      },
-      {
-        "id": "kimi-k2.6",
-        "displayName": "Kimi K2.6",
-        "description": "Good for long-running reasoning tasks.",
-        "toolCall": true,
-        "reasoning": true,
-        "reasoningEfforts": [],
-        "modalities": {
-          "input": [
-            "text"
-          ],
-          "output": [
-            "text"
-          ]
-        },
-        "limits": {
-          "context": 262144
         }
       },
       {
