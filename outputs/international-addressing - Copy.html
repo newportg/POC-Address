@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>International Addressing Standards â€” UPU S42 vs ISO 20022</title>
+<title>International Addressing Standards — UPU S42 vs ISO 20022</title>
 <style>
 :root {
   --bg: #0a0a0f;
@@ -287,16 +287,6 @@ code {
   font-size: 1.25rem;
 }
 
-/* Mermaid diagrams */
-.mermaid {
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin: 1rem 0;
-  overflow-x: auto;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .comparison { grid-template-columns: 1fr; }
@@ -317,7 +307,6 @@ code {
   <div class="tab" data-tab="uk">UK Format</div>
   <div class="tab" data-tab="api">LOQATE API</div>
   <div class="tab" data-tab="design">POC Design</div>
-  <div class="tab" data-tab="app">POC App</div>
 </div>
 
 <!-- Overview Tab -->
@@ -327,36 +316,61 @@ code {
       <div class="card-icon" style="background: rgba(99,102,241,0.2);">📋</div>
       <div>
         <h3 style="margin: 0;">Two Standards, Two Purposes</h3>
-        <p style="margin: 0;">Comparison of UPU S42 and ISO 20022 for global address management</p>
+        <p style="margin: 0;">ISO cannot make up its mind — so we compare both</p>
       </div>
     </div>
 
-    <p>Comparison of UPU S42 and ISO 20022 for global address management. Source: <code>outputs/international-addressing.html</code> (Overview tab).</p>
-    <h3>Two Standards, Two Purposes</h3>
-    <h4>UPU S42 â€” Postal Addressing</h4>
-    <ul style="color: var(--text-dim); padding-left: 1.5rem;">
-      <li><strong>Scope:</strong> Global postal addressing standard</li>
-      <li><strong>Focus:</strong> Logical structure of postal addresses for mail delivery</li>
-      <li><strong>Application:</strong> Postal operations and cross-border mail</li>
-      <li><strong>Flexibility:</strong> Adaptable by any country</li>
-    </ul>
-    <h4>ISO 20022 â€” Financial Messaging</h4>
-    <ul style="color: var(--text-dim); padding-left: 1.5rem;">
-      <li><strong>Scope:</strong> Financial transaction data format</li>
-      <li><strong>Focus:</strong> Structured data for financial transactions</li>
-      <li><strong>Application:</strong> Banking, payments, regulatory compliance</li>
-      <li><strong>Coverage:</strong> Only 32 countries</li>
-    </ul>
+    <div class="comparison">
+      <div class="comparison-col">
+        <h4><span class="badge badge-upu">UPU S42</span> Postal Addressing</h4>
+        <p><strong>Scope:</strong> Global postal addressing standard</p>
+        <p><strong>Focus:</strong> Logical structure of postal addresses for mail delivery</p>
+        <p><strong>Application:</strong> Postal operations and cross-border mail</p>
+        <p><strong>Flexibility:</strong> Adaptable by any country</p>
+      </div>
+      <div class="comparison-col">
+        <h4><span class="badge badge-iso">ISO 20022</span> Financial Messaging</h4>
+        <p><strong>Scope:</strong> Financial transaction data format</p>
+        <p><strong>Focus:</strong> Structured data for financial transactions</p>
+        <p><strong>Application:</strong> Banking, payments, regulatory compliance</p>
+        <p><strong>Coverage:</strong> Only 32 countries</p>
+      </div>
+    </div>
+
     <h3>Key Differences</h3>
     <table>
-      <tr><th>Aspect</th><th>UPU S42</th><th>ISO 20022</th></tr>
-      <tr><td>Type</td><td>Postal addressing standard</td><td>Financial messaging standard</td></tr>
-      <tr><td>Structure</td><td>Generic elements + country templates</td><td>Highly structured XML tags</td></tr>
-      <tr><td>Adaptability</td><td>Flexible, country-specific</td><td>Rigid, fixed format</td></tr>
-      <tr><td>Best For</td><td>Web applications, mail delivery</td><td>Financial operations, compliance</td></tr>
+      <tr>
+        <th>Aspect</th>
+        <th>UPU S42</th>
+        <th>ISO 20022</th>
+      </tr>
+      <tr>
+        <td>Type</td>
+        <td>Postal addressing standard</td>
+        <td>Financial messaging standard</td>
+      </tr>
+      <tr>
+        <td>Structure</td>
+        <td>Generic elements + country templates</td>
+        <td>Highly structured XML tags</td>
+      </tr>
+      <tr>
+        <td>Adaptability</td>
+        <td>Flexible, country-specific</td>
+        <td>Rigid, fixed format</td>
+      </tr>
+      <tr>
+        <td>Best For</td>
+        <td>Web applications, mail delivery</td>
+        <td>Financial operations, compliance</td>
+      </tr>
     </table>
-    <h3>Recommendation</h3>
-    <p>UPU S42 is the better choice for most address management scenarios due to its flexibility and wider country coverage. See UPU-S42 and ISO-20022.</p>
+
+    <div class="card" style="background: rgba(16,185,129,0.1); border-color: var(--success);">
+      <p style="margin: 0; color: var(--success); font-weight: 600;">
+        ✓ Recommendation: UPU S42 is the better choice for most address management scenarios due to its flexibility and wider country coverage.
+      </p>
+    </div>
   </div>
 </div>
 
@@ -371,19 +385,68 @@ code {
       </div>
     </div>
 
-    <p>Universal Postal Union framework for postal addressing. Source: <code>outputs/international-addressing.html</code> (UPU S42 tab).</p>
     <p>The UPU S42 standard provides a comprehensive framework for postal addressing, designed to accommodate the diverse formats used by different countries. It includes a generic list of address elements and country-specific templates to guide users in formatting addresses correctly for mail delivery.</p>
-    <h3>Element Structure</h3>
+
+    <h3>UPU S42 Element Structure</h3>
     <table>
-      <tr><th>Element</th><th>Field Name</th></tr>
-      <tr><td><strong>Organisation</strong></td><td>Organisation Name, Department Name</td></tr>
-      <tr><td><strong>Premises</strong></td><td>Sub Building Name, Building Name, Building Number</td></tr>
-      <tr><td><strong>Thoroughfare</strong></td><td>Dependent Thoroughfare Name, Dependent Thoroughfare Descriptor, Thoroughfare Name, Thoroughfare Descriptor</td></tr>
-      <tr><td><strong>Locality</strong></td><td>Double Dependent Locality, Dependent Locality, Post town</td></tr>
-      <tr><td><strong>Postcode</strong></td><td>Postcode</td></tr>
-      <tr><td><strong>PO Box</strong></td><td>PO Box</td></tr>
-      <tr><td><strong>Country</strong></td><td>Country Name, ISO3166-2, ISO3166-3, ISO3166-N</td></tr>
+      <tr>
+        <th>Element</th>
+        <th>Field Name</th>
+      </tr>
+      <tr>
+        <td rowspan="2"><strong>Organisation</strong></td>
+        <td>Organisation Name</td>
+      </tr>
+      <tr>
+        <td>Department Name</td>
+      </tr>
+      <tr>
+        <td rowspan="3"><strong>Premises</strong></td>
+        <td>Sub Building Name</td>
+      </tr>
+      <tr>
+        <td>Building Name</td>
+      </tr>
+      <tr>
+        <td>Building Number</td>
+      </tr>
+      <tr>
+        <td rowspan="4"><strong>Thoroughfare</strong></td>
+        <td>Dependent Thoroughfare Name</td>
+      </tr>
+      <tr>
+        <td>Dependent Thoroughfare Descriptor</td>
+      </tr>
+      <tr>
+        <td>Thoroughfare Name</td>
+      </tr>
+      <tr>
+        <td>Thoroughfare Descriptor</td>
+      </tr>
+      <tr>
+        <td rowspan="3"><strong>Locality</strong></td>
+        <td>Double Dependent Locality</td>
+      </tr>
+      <tr>
+        <td>Dependent Locality</td>
+      </tr>
+      <tr>
+        <td>Post town</td>
+      </tr>
+      <tr>
+        <td><strong>Postcode</strong></td>
+        <td>Postcode</td>
+      </tr>
+      <tr>
+        <td><strong>PO Box</strong></td>
+        <td>PO Box</td>
+      </tr>
+      <tr>
+        <td><strong>Country</strong></td>
+        <td>Country Name, ISO3166-2, ISO3166-3, ISO3166-N</td>
+      </tr>
     </table>
+
     <h3>Key Features</h3>
     <ul style="color: var(--text-dim); padding-left: 1.5rem;">
       <li>Universal framework adaptable by any country</li>
@@ -406,29 +469,98 @@ code {
       </div>
     </div>
 
-    <p>Financial messaging standard for transaction data. Source: <code>outputs/international-addressing.html</code> (ISO 20022 tab).</p>
     <p>ISO 20022 defines a standardised, structured data format for financial messaging, including specific, granular fields for address components, primarily for efficiency and accuracy in financial transactions.</p>
-    <p>> [!warning] Important</p>
-    <p>> ISO 20022 currently only applies to 32 countries.</p>
-    <h3>Address Fields</h3>
+
+    <div class="card" style="background: rgba(239,68,68,0.1); border-color: var(--danger);">
+      <p style="margin: 0; color: var(--danger); font-weight: 600;">
+        ⚠ Important: ISO 20022 currently only applies to 32 countries.
+      </p>
+    </div>
+
+    <h3>ISO 20022 Address Fields</h3>
     <table>
-      <tr><th>Field</th><th>XML Tag</th><th>Description</th></tr>
-      <tr><td>Department</td><td><code><Dept></code></td><td>Specific business units or departments</td></tr>
-      <tr><td>Sub Department</td><td><code><SubDept></code></td><td>The sub department name</td></tr>
-      <tr><td>Street Name</td><td><code><StrtNm></code></td><td>The name of the street</td></tr>
-      <tr><td>Building Number</td><td><code><BldgNb></code></td><td>The number of the building</td></tr>
-      <tr><td>Building Name</td><td><code><BldgNm></code></td><td>The name of the building</td></tr>
-      <tr><td>Floor</td><td><code><Flr></code></td><td>The building floor</td></tr>
-      <tr><td>Post Box</td><td><code><PstBx></code></td><td>The PostBox</td></tr>
-      <tr><td>Room</td><td><code><Room></code></td><td>Room number or name</td></tr>
-      <tr><td>Postal Code</td><td><code><PstCd></code></td><td>The postal code for the address</td></tr>
-      <tr><td>Town Name</td><td><code><TwnNm></code></td><td>The name of the city or town</td></tr>
-      <tr><td>Town Location Name</td><td><code><TwnLctnNm></code></td><td>A specific location within a town</td></tr>
-      <tr><td>District Name</td><td><code><DstrctNm></code></td><td>The name of a larger district</td></tr>
-      <tr><td>Country Subdivision</td><td><code><CtrySubDvsn></code></td><td>A state, province, or other subdivision</td></tr>
-      <tr><td>Country</td><td><code><Ctry></code></td><td>Two-character ISO country code</td></tr>
-      <tr><td>Address Line</td><td><code><AdrLine></code></td><td>Optional additional address information</td></tr>
+      <tr>
+        <th>Field</th>
+        <th>XML Tag</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>Department</td>
+        <td><code>&lt;Dept&gt;</code></td>
+        <td>Specific business units or departments</td>
+      </tr>
+      <tr>
+        <td>Sub Department</td>
+        <td><code>&lt;SubDept&gt;</code></td>
+        <td>The sub department name</td>
+      </tr>
+      <tr>
+        <td>Street Name</td>
+        <td><code>&lt;StrtNm&gt;</code></td>
+        <td>The name of the street</td>
+      </tr>
+      <tr>
+        <td>Building Number</td>
+        <td><code>&lt;BldgNb&gt;</code></td>
+        <td>The number of the building</td>
+      </tr>
+      <tr>
+        <td>Building Name</td>
+        <td><code>&lt;BldgNm&gt;</code></td>
+        <td>The name of the building</td>
+      </tr>
+      <tr>
+        <td>Floor</td>
+        <td><code>&lt;Flr&gt;</code></td>
+        <td>The building floor</td>
+      </tr>
+      <tr>
+        <td>Post Box</td>
+        <td><code>&lt;PstBx&gt;</code></td>
+        <td>The PostBox</td>
+      </tr>
+      <tr>
+        <td>Room</td>
+        <td><code>&lt;Room&gt;</code></td>
+        <td>Room number or name</td>
+      </tr>
+      <tr>
+        <td>Postal Code</td>
+        <td><code>&lt;PstCd&gt;</code></td>
+        <td>The postal code for the address</td>
+      </tr>
+      <tr>
+        <td>Town Name</td>
+        <td><code>&lt;TwnNm&gt;</code></td>
+        <td>The name of the city or town</td>
+      </tr>
+      <tr>
+        <td>Town Location Name</td>
+        <td><code>&lt;TwnLctnNm&gt;</code></td>
+        <td>A specific location within a town</td>
+      </tr>
+      <tr>
+        <td>District Name</td>
+        <td><code>&lt;DstrctNm&gt;</code></td>
+        <td>The name of a larger district</td>
+      </tr>
+      <tr>
+        <td>Country Subdivision</td>
+        <td><code>&lt;CtrySubDvsn&gt;</code></td>
+        <td>A state, province, or other subdivision</td>
+      </tr>
+      <tr>
+        <td>Country</td>
+        <td><code>&lt;Ctry&gt;</code></td>
+        <td>Two-character ISO country code</td>
+      </tr>
+      <tr>
+        <td>Address Line</td>
+        <td><code>&lt;AdrLine&gt;</code></td>
+        <td>Optional additional address information</td>
+      </tr>
     </table>
+
     <h3>Evolution</h3>
     <p>The standard has evolved, with the 2019 version (PostalAddress24) offering a more detailed 15-field structure compared to the 2009 version (PostalAddress6).</p>
   </div>
@@ -441,24 +573,76 @@ code {
       <div class="card-icon" style="background: rgba(16,185,129,0.2);">🇬🇧</div>
       <div>
         <h3 style="margin: 0;">UK Address Format</h3>
-        <p style="margin: 0;">As described by UPU S42 (uses 9 of 15 elements)</p>
+        <p style="margin: 0;">As described by UPU S42 — uses 9 of 15 elements</p>
       </div>
     </div>
 
-    <p>As described by UPU S42 â€” uses 9 of 15 elements. Source: <code>outputs/international-addressing.html</code> (UK Format tab).</p>
-    <h3>Address Lines</h3>
-    <table>
-      <tr><th>#</th><th>Field</th><th>Example</th></tr>
-      <tr><td>1</td><td>Organization</td><td>"Acme Corp"</td></tr>
-      <tr><td>2</td><td>Department</td><td>"Marketing"</td></tr>
-      <tr><td>3</td><td>PostBox</td><td>"PO Box 123"</td></tr>
-      <tr><td>4</td><td>SubBuilding Building</td><td>"Unit 5, High Street"</td></tr>
-      <tr><td>5</td><td>Premise Thoroughfare</td><td>"93 Teagues Crescent"</td></tr>
-      <tr><td>6</td><td>DoubleDependentLocality</td><td>"Trench"</td></tr>
-      <tr><td>7</td><td>DependentLocality</td><td>"Telford"</td></tr>
-      <tr><td>8</td><td>Locality</td><td>"Telford"</td></tr>
-      <tr><td>9</td><td>PostalCode</td><td>"TF2 6RF"</td></tr>
-    </table>
+    <div class="address-format">
+      <div class="address-line">
+        <div class="line-number">1</div>
+        <div class="line-content">
+          <div class="line-field">Organization</div>
+          <div class="line-example">e.g., "Acme Corp"</div>
+        </div>
+      </div>
+      <div class="address-line">
+        <div class="line-number">2</div>
+        <div class="line-content">
+          <div class="line-field">Department</div>
+          <div class="line-example">e.g., "Marketing"</div>
+        </div>
+      </div>
+      <div class="address-line">
+        <div class="line-number">3</div>
+        <div class="line-content">
+          <div class="line-field">PostBox</div>
+          <div class="line-example">e.g., "PO Box 123"</div>
+        </div>
+      </div>
+      <div class="address-line">
+        <div class="line-number">4</div>
+        <div class="line-content">
+          <div class="line-field">SubBuilding Building</div>
+          <div class="line-example">e.g., "Unit 5, High Street"</div>
+        </div>
+      </div>
+      <div class="address-line">
+        <div class="line-number">5</div>
+        <div class="line-content">
+          <div class="line-field">Premise Thoroughfare</div>
+          <div class="line-example">e.g., "93 Teagues Crescent"</div>
+        </div>
+      </div>
+      <div class="address-line">
+        <div class="line-number">6</div>
+        <div class="line-content">
+          <div class="line-field">DoubleDependentLocality</div>
+          <div class="line-example">e.g., "Trench"</div>
+        </div>
+      </div>
+      <div class="address-line">
+        <div class="line-number">7</div>
+        <div class="line-content">
+          <div class="line-field">DependentLocality</div>
+          <div class="line-example">e.g., "Telford"</div>
+        </div>
+      </div>
+      <div class="address-line">
+        <div class="line-number">8</div>
+        <div class="line-content">
+          <div class="line-field">Locality</div>
+          <div class="line-example">e.g., "Telford"</div>
+        </div>
+      </div>
+      <div class="address-line">
+        <div class="line-number">9</div>
+        <div class="line-content">
+          <div class="line-field">PostalCode</div>
+          <div class="line-example">e.g., "TF2 6RF"</div>
+        </div>
+      </div>
+    </div>
+
     <h3>Example: 93 Teagues Crescent</h3>
     <pre><code>{
   "Address": "93 Teagues Crescent&lt;br&gt;Trench&lt;br&gt;Telford&lt;br&gt;TF2 6RF",
@@ -502,63 +686,13 @@ code {
       </div>
     </div>
 
-    <p>Reference implementation for address verification. Source: <code>outputs/international-addressing.html</code> (LOQATE API tab).</p>
-    <h3>Find API (Interactive Search)</h3>
-    <pre><code>GET https://api.addressy.com/Capture/Interactive/Find/v1.20/json6.ws
-    ?Key=YOUR_API_KEY
-    &amp;Text=tf26rf
-    &amp;Countries=GB
-    &amp;Limit=100</code></pre>
-    <h4>Request </h4>
-    <pre><code>curl --request GET \
-  --url 'https://api.addressy.com/Capture/Interactive/Find/v1.20/json6.ws?Key=API-KEY&amp;Text=tf26rf'</code></pre>
-    <h4>Response </h4>
-    <pre><code>{
-	"Items":[
-		{
-			"Id":"gb-rm|ZWsIBaEBbtdL8wmKn2Iy",
-			"Type":"Postcode",
-			"Text":"TF2 6RF",
-			"Highlight":"0-3,4-7",
-			"Description":"Telford - 54 Addresses"
-		}
-	]
-}</code></pre>
-    <h4>Subsequent Request</h4>
-    <p>feed id from previous response into the Container request parameter </p>
-    <pre><code>curl --request GET \
-  --url 'https://api.addressy.com/Capture/Interactive/Find/v1.20/json6.ws?Key=API-KEY&amp;Text=tf26rf&amp;Container=gb-rm%7CZWsIBaEBbtdL8wmKn2Iy'</code></pre>
-    <h4>Response</h4>
-    <pre><code>{
-	"Items":[
-		{
-			"Id":"GB|RM|B|24490745|ENG",
-			"Type":"Address",
-			"Text":"41 Teagues Crescent",
-			"Highlight":"",
-			"Description":"Trench Telford TF2 6RF"
-		},
-		{
-			"Id":"GB|RM|B|24490746|ENG",
-			"Type":"Address",
-			"Text":"41A Teagues Crescent",
-			"Highlight":"",
-			"Description":"Trench Telford TF2 6RF"
-			},
-			...
-		}
-	]
-}</code></pre>
-    <h3>Recursive Find Flow</h3>
-    <p>Search: <code>"tf26rf"</code> â†’ Postcode Container â†’ <code>Container: gb-rm|xxx</code> â†’ 54 Addresses</p>
-    <h3>Verify API Request (Detail API)</h3>
-    <p>Endpoint used by the app: <code>POST https://api.addressy.com/Cleansing/International/Batch/v1.20/json6.ws</code></p>
+    <h3>Verify API Request</h3>
     <pre><code>curl --request POST \
   --url https://api.addressy.com/Cleansing/International/Batch/v1.10/json6.ws \
   --header 'Content-Type: application/json' \
   --data '{
-  "Key": "...",
-  "GeoCode": true,
+  "Key": "YOUR_API_KEY",
+  "GeoCode": false,
   "Options": {
     "Process": "Verify",
     "Enhance": false
@@ -566,52 +700,82 @@ code {
   "Addresses": [
     {
       "Department": "",
-      "PostalCode": "EC2M 7NH",
+      "PostalCode": "tf26rf",
       "Country": "United Kingdom",
-      "Address": "1 Liverpool Street"
+      "Address": "93 teagues crescent"
     }
-  ],
-  "Options": {
-    "Process": "Verify",
-    "Enhance": false,
-    "ServerOptions": {
-      "OutputAddressFormat": "YES"
-    }
-  }
-}</code></pre>
-    <h4>Response</h4>
-    <pre><code>{
-    "AQI": "A",
-    "AVC": "V44-I44-P6-100",
-    "Address": "1 Liverpool Street&lt;br&gt;London&lt;br&gt;EC2M 7NH",
-    "Address1": "1 Liverpool Street",
-    "Address2": "London",
-    "Address3": "EC2M 7NH",
-    "AddressFormat": "Premise Thoroughfare&lt;br&gt;Locality&lt;br&gt;PostalCode",
-    "AdministrativeArea": "London",
-    "Country": "GB",
-    "CountryName": "United Kingdom",
-    "DeliveryAddress": "1 Liverpool Street",
-    "DeliveryAddress1": "1 Liverpool Street",
-    "DeliveryAddressFormat": "Premise Thoroughfare",
-    "GeoAccuracy": "I4",
-    "GeoDistance": "0.0",
-    "HyphenClass": "B",
-    "ID": "GB|RM|B|52840932|ENG",
-    "ISO3166-2": "GB",
-    "ISO3166-3": "GBR",
-    "ISO3166-N": "826",
-    "Latitude": "51.517670",
-    "Locality": "London",
-    "Longitude": "-0.084339",
-    "MatchRuleLabel": "Rlh",
-    "PostalCode": "EC2M 7NH",
-    "PostalCodePrimary": "EC2M 7NH",
-    "Premise": "1",
-    "PremiseNumber": "1",
-    "Sequence": "1",
-    "Thoroughfare": "Liverpool Street"
-  }</code></pre>
+  ]
+}'</code></pre>
+
+    <h3>Find API (Interactive Search)</h3>
+    <pre><code>GET https://api.addressy.com/Capture/Interactive/Find/v1.20/json6.ws
+    ?Key=YOUR_API_KEY
+    &Text=tf26rf
+    &Countries=GB
+    &Limit=100</code></pre>
+
+    <h3>Recursive Find Flow</h3>
+    <div class="flow">
+      <div class="flow-step">Search: "tf26rf"</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Postcode Container</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Container: gb-rm|xxx</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">54 Addresses</div>
+    </div>
+
+    <h3>Response Fields</h3>
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><code>Address</code></td>
+        <td>Full formatted address with line breaks</td>
+      </tr>
+      <tr>
+        <td><code>Address1-8</code></td>
+        <td>Individual address lines</td>
+      </tr>
+      <tr>
+        <td><code>DeliveryAddress</code></td>
+        <td>Address without organisation/postcode hierarchy</td>
+      </tr>
+      <tr>
+        <td><code>Organisation</code></td>
+        <td>Business name</td>
+      </tr>
+      <tr>
+        <td><code>Building</code></td>
+        <td>Building name</td>
+      </tr>
+      <tr>
+        <td><code>Premise</code></td>
+        <td>House/building number</td>
+      </tr>
+      <tr>
+        <td><code>Thoroughfare</code></td>
+        <td>Street name</td>
+      </tr>
+      <tr>
+        <td><code>Locality</code></td>
+        <td>City/town</td>
+      </tr>
+      <tr>
+        <td><code>PostalCode</code></td>
+        <td>Postal code</td>
+      </tr>
+      <tr>
+        <td><code>AVC</code></td>
+        <td>Address Verification Code</td>
+      </tr>
+      <tr>
+        <td><code>AQI</code></td>
+        <td>Address Quality Index (A-F)</td>
+      </tr>
+    </table>
   </div>
 </div>
 
@@ -619,7 +783,7 @@ code {
 <div class="tab-content" id="design">
   <div class="card">
     <div class="card-header">
-      <div class="card-icon" style="background: rgba(99,102,241,0.2);">ðŸ—ï¸</div>
+      <div class="card-icon" style="background: rgba(99,102,241,0.2);">🏗️</div>
       <div>
         <h3 style="margin: 0;">POC Address Application Design</h3>
         <p style="margin: 0;">Architecture, data flow, and technology stack</p>
@@ -714,64 +878,20 @@ code {
     <h3>Data Flow</h3>
     <div class="flow">
       <div class="flow-step">User Search</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">LOQATE Find</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Map Markers</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">User Selects</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Cache Check</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">LOQATE Verify</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Formatted Address</div>
     </div>
 
-        <h3>Component Diagram</h3>
-    <div class="card" style="background: var(--code-bg); padding: 1rem;">
-      <svg viewBox="0 0 800 260" style="width: 100%; height: auto; max-width: 800px;">
-        <defs>
-          <marker id="arrowhead-comp" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1"/>
-          </marker>
-        </defs>
-
-        <rect x="10" y="20" width="170" height="160" rx="8" fill="rgba(99,102,241,0.15)" stroke="#6366f1" stroke-width="2"/>
-        <text x="95" y="45" text-anchor="middle" fill="#e8e8f0" font-size="13" font-weight="600">Pages</text>
-        <rect x="30" y="60" width="130" height="35" rx="6" fill="#1a1a25" stroke="#6366f1"/>
-        <text x="95" y="82" text-anchor="middle" fill="#e8e8f0" font-size="11">+page.svelte</text>
-        <rect x="30" y="110" width="130" height="35" rx="6" fill="#1a1a25" stroke="#6366f1"/>
-        <text x="95" y="132" text-anchor="middle" fill="#e8e8f0" font-size="11">docs/+page.svelte</text>
-
-        <rect x="210" y="20" width="170" height="160" rx="8" fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width="2"/>
-        <text x="295" y="45" text-anchor="middle" fill="#e8e8f0" font-size="13" font-weight="600">Components</text>
-        <rect x="230" y="60" width="130" height="35" rx="6" fill="#1a1a25" stroke="#10b981"/>
-        <text x="295" y="82" text-anchor="middle" fill="#e8e8f0" font-size="11">Map.svelte</text>
-
-        <rect x="410" y="20" width="170" height="160" rx="8" fill="rgba(245,158,11,0.15)" stroke="#f59e0b" stroke-width="2"/>
-        <text x="495" y="45" text-anchor="middle" fill="#e8e8f0" font-size="13" font-weight="600">Lib</text>
-        <rect x="430" y="60" width="130" height="35" rx="6" fill="#1a1a25" stroke="#f59e0b"/>
-        <text x="495" y="82" text-anchor="middle" fill="#e8e8f0" font-size="11">types.ts</text>
-        <rect x="430" y="110" width="130" height="35" rx="6" fill="#1a1a25" stroke="#f59e0b"/>
-        <text x="495" y="132" text-anchor="middle" fill="#e8e8f0" font-size="11">cache.ts</text>
-
-        <rect x="610" y="20" width="180" height="160" rx="8" fill="rgba(139,92,246,0.15)" stroke="#8b5cf6" stroke-width="2"/>
-        <text x="700" y="45" text-anchor="middle" fill="#e8e8f0" font-size="13" font-weight="600">API</text>
-        <rect x="625" y="60" width="150" height="25" rx="6" fill="#1a1a25" stroke="#8b5cf6"/>
-        <text x="700" y="77" text-anchor="middle" fill="#e8e8f0" font-size="10">api/countries</text>
-        <rect x="625" y="90" width="150" height="25" rx="6" fill="#1a1a25" stroke="#8b5cf6"/>
-        <text x="700" y="107" text-anchor="middle" fill="#e8e8f0" font-size="10">api/search</text>
-        <rect x="625" y="120" width="150" height="25" rx="6" fill="#1a1a25" stroke="#8b5cf6"/>
-        <text x="700" y="137" text-anchor="middle" fill="#e8e8f0" font-size="10">api/retrieve</text>
-        <rect x="625" y="150" width="150" height="25" rx="6" fill="#1a1a25" stroke="#8b5cf6"/>
-        <text x="700" y="167" text-anchor="middle" fill="#e8e8f0" font-size="10">api/docs</text>
-
-        <line x1="180" y1="77" x2="210" y2="77" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowhead-comp)"/>
-        <line x1="380" y1="77" x2="410" y2="77" stroke="#10b981" stroke-width="2" marker-end="url(#arrowhead-comp)"/>
-        <line x1="580" y1="77" x2="610" y2="77" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead-comp)"/>
-      </svg>
-    </div>
     <h3>API Endpoints</h3>
     <table>
       <tr>
@@ -829,9 +949,6 @@ code {
       <li>Join non-empty values with spaces</li>
     </ol>
 
-    <h3>Standard</h3>
-    <p>Uses <strong>UPU S42</strong> (not ISO 20022). UPU S42 is more flexible, covers more countries, and is designed for web application adaptation.</p>
-
     <h3>Technology Stack</h3>
     <table>
       <tr>
@@ -867,44 +984,31 @@ code {
     <h3>User Flow</h3>
     <div class="flow">
       <div class="flow-step">Page Load</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Fetch Countries</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">World Map</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Select Country</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Enter Query</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Search API</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Map Markers</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Click Result</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Retrieve API</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Cache Hit?</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Verify API</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Store Cache</div>
-      <div class="flow-arrow">â†’</div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step">Display Address</div>
     </div>
-  </div>
-</div>
-<!-- POC App Tab -->
-<div class="tab-content" id="app">
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon" style="background: rgba(99,102,241,0.2);">ðŸ“</div>
-      <div>
-        <h3 style="margin: 0;">POC Address â€” Static App</h3>
-        <p style="margin: 0;">International address search and verification using LOQATE services</p>
-      </div>
-    </div>
-    <iframe src="app/" style="width: 100%; height: 85vh; border: 1px solid var(--border); border-radius: 0.75rem; background: var(--bg);" title="POC Address Static App"></iframe>
   </div>
 </div>
 
