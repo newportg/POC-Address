@@ -414,13 +414,30 @@ function displayResults(results) {
     li.innerHTML = '<div class="result-text">' + result.text + '</div><div class="result-description">' + result.description + '</div>';
     li.onclick = function() { selectResult(result, this); };
     list.appendChild(li);
-    const coords = getDemoCoords(index, result.text);
+    const coords = getCoords(index, result);
     const marker = L.marker(coords).addTo(map).bindPopup('<strong>' + result.text + '</strong><br>' + result.description);
     marker.on('click', function() { selectResult(result, li); });
     markers.push(marker);
+    result._marker = marker;
+    result._coords = coords;
     bounds.extend(coords);
   });
-  if (markers.length > 0) map.fitBounds(bounds.pad(0.1));
+  if (bounds.isValid()) map.fitBounds(bounds.pad(0.1));
+}
+
+function getCoords(index, result) {
+  const demo = demoVerifyFor(result);
+  if (demo && demo.Latitude && demo.Longitude) {
+    return [parseFloat(demo.Latitude), parseFloat(demo.Longitude)];
+  }
+  return getDemoCoords(index, result.text);
+}
+
+function demoVerifyFor(result) {
+  for (const [id, data] of Object.entries(DEMO_VERIFY)) {
+    if (result.id === id || (data.Address1 && result.text.includes(data.Address1))) return data;
+  }
+  return null;
 }
 
 function getDemoCoords(index, text) {
@@ -446,6 +463,16 @@ async function selectResult(result, element) {
   const detail = document.getElementById('detail');
   detail.innerHTML = '<div class="loading">Loading address details...</div>';
   detail.style.display = 'block';
+
+  // Highlight and zoom to the selected address on the map
+  markers.forEach(m => m.setOpacity(0.6));
+  if (result._marker) {
+    result._marker.setOpacity(1);
+    map.setView(result._coords, 17);
+    result._marker.openPopup();
+  } else if (result._coords) {
+    map.setView(result._coords, 17);
+  }
 
   try {
     let data;

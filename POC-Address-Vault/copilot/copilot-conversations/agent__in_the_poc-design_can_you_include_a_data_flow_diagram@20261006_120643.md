@@ -4,7 +4,7 @@ mode: agent
 backendId: opencode
 sessionId: "ses_eef221bf0ffeUmAUeLyiHAEzcD"
 agentLabel: "Add data flow diagram to poc-design.md"
-usage: '{"usedTokens":159003,"contextWindow":1048576,"updatedAt":1791289405941}'
+usage: '{"usedTokens":164896,"contextWindow":1048576,"updatedAt":1791290066763}'
 tags:
   - copilot-conversation
 ---
@@ -200,3 +200,18 @@ Also note there's an older static copy at `outputs/poc-address-app.html` — it'
 
 **Setup note:** in the GitHub repo, set Settings → Pages → Source to **GitHub Actions** (not "Deploy from a branch") so this workflow is used. The iframe and tiles will work once served over HTTPS, which GitHub Pages provides.
 [Timestamp: 2026/10/06 13:21:11]
+
+**user**: The map does not zoom or indicate the selected address detail
+[Timestamp: 2026/10/06 13:31:52]
+
+**ai**: Fixed in `POC/poc-address-app.html` and re-staged to `docs/app/index.html` via the publish script:
+
+**Map now zooms on search/selection:**
+- `displayResults` now builds `L.latLngBounds()` from the actual marker coordinates and calls `map.fitBounds(bounds.pad(0.1))` guarded by `bounds.isValid()` — previously all results were placed by hash-derived demo coordinates, so the bounds were scattered and the map effectively stayed zoomed out.
+- Markers are now positioned from real data: if the result has matching demo/LOQATE lat/long (e.g. `Latitude`/`Longitude` in `DEMO_VERIFY`), those coordinates are used; otherwise it falls back to the hash-based demo placement.
+
+**Selected address is indicated:**
+- Each marker is stored on its result (`result._marker`, `result._coords`). On `selectResult`, the map now `setView(result._coords, 17)`, opens that marker's popup, sets other markers to 60% opacity, and shows the detail panel — mirroring the SvelteKit app's behaviour.
+
+Re-run `powershell -File scripts/publish.ps1` (or it happens in CI on push) to regenerate `docs/`. If you're testing locally, serve `docs/` (`npx serve docs`) rather than opening the file directly, since `file://` gets no Referer and OSM blocks the tiles.
+[Timestamp: 2026/10/06 13:31:52]
