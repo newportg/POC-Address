@@ -4,7 +4,7 @@ mode: agent
 backendId: opencode
 sessionId: "ses_eef221bf0ffeUmAUeLyiHAEzcD"
 agentLabel: "Add data flow diagram to poc-design.md"
-usage: '{"usedTokens":153391,"contextWindow":1048576,"updatedAt":1791289069878}'
+usage: '{"usedTokens":159003,"contextWindow":1048576,"updatedAt":1791289405941}'
 tags:
   - copilot-conversation
 ---
@@ -188,5 +188,15 @@ Also note there's an older static copy at `outputs/poc-address-app.html` — it'
 **user**: ok I want the static web app to appear as  a tab on the international-addressing.html. can you update the script, and create a github action to publish it to the github pages
 [Timestamp: 2026/10/06 13:21:11]
 
-**ai**: 
+**ai**: Done. Summary:
+
+**POC App tab in the design doc:**
+- `scripts/template.html` — added a "POC App" tab; its content is a card with an iframe pointing at `app/` (the static app), styled to fill the remaining height.
+- `scripts/publish.ps1` — after building the HTML it now stages `docs\index.html` (the international-addressing page) and copies `POC\poc-address-app.html` to `docs\app\index.html`, plus ensures `docs\.nojekyll` exists. So locally, serve `docs/` with `npx serve docs` and the new tab's iframe resolves to the app.
+
+**GitHub Action (`.github/workflows/deploy-pages.yml`):**
+- Triggers on pushes to `main` touching `docs/**`, the wiki, or the scripts, plus manual dispatch.
+- Runs `publish.ps1` via `pwsh` (so wiki edits alone regenerate and publish the site), uploads `docs/` as the Pages artifact, and deploys it.
+
+**Setup note:** in the GitHub repo, set Settings → Pages → Source to **GitHub Actions** (not "Deploy from a branch") so this workflow is used. The iframe and tiles will work once served over HTTPS, which GitHub Pages provides.
 [Timestamp: 2026/10/06 13:21:11]

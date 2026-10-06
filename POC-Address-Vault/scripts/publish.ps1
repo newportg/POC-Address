@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
   Regenerates outputs/international-addressing.html from the wiki pages.
 .DESCRIPTION
@@ -152,6 +152,6 @@ Write-Host "Wrote $target"
 $docs = Join-Path (Split-Path $vault -Parent) 'docs'
 New-Item -ItemType Directory -Force (Join-Path $docs 'app') | Out-Null
 Copy-Item $target (Join-Path $docs 'index.html')
-Copy-Item (Join-Path $vault 'POC\poc-address-app.html') (Join-Path $docs 'app\index.html')
+Copy-Item (Join-Path (Join-Path $vault 'POC') 'poc-address-app.html') (Join-Path $docs 'app\index.html')
 New-Item -ItemType File -Force (Join-Path $docs '.nojekyll') | Out-Null
 Write-Host "Staged docs\index.html and docs\app\index.html"
